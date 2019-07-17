@@ -1,0 +1,126 @@
+<template>
+  <b-form
+    @submit.prevent="onSubmit(username, password)"
+    @reset.prevent="onReset"
+    class="form"
+  >
+    <qs-input 
+      v-model="username" 
+      v-validate="{ required: true }"
+      name="username"
+      label="Usuario"
+      data-vv-as="Usuario"
+      placeholder="Ingrese su usuario"
+      :field="fields['username']"
+      :error="errors.first('username')"
+      class="input"
+    />
+
+    <qs-input 
+      v-model="password" 
+      v-validate="{ required: true }"
+      name="password"
+      label="Contraseña"
+      type="password"
+      data-vv-as="Contraseña"
+      placeholder="Digite su contraseña"
+      :field="fields['password']"
+      :error="errors.first('password')"
+      class="input"
+    />
+
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="gridCheck1">
+      <label class="form-check-label" for="gridCheck1">
+          Recordar
+      </label>
+    </div>
+
+    <div class="controls">
+      <b-button 
+        type="submit" 
+        variant="primary"
+        class="button"
+        :class="[ { movil: isMovile() } ]"
+      >
+        Aceptar
+      </b-button>
+    </div>
+  </b-form>
+</template>
+
+<script>
+import QsInput from '@/components/atoms/QsInput'
+import { mapActions, mapState } from 'vuex';
+
+export default {
+  components: {
+    QsInput,
+  },
+  data() {
+    return {
+      username: '',
+      password: '',
+    }
+  },
+  computed: {
+    ...mapState('login', {
+      loading: 'loading',
+    }),
+  },
+  methods: {
+    ...mapActions('login',{
+      logIn: 'logIn',
+      logOut: 'logOut',
+    }),
+    onSubmit(username, password) {
+      this.logIn({ 
+        username: this.username,
+        password: this.password, 
+      })
+    },
+  },
+}
+</script>
+
+<style lang="scss" scoped>
+.form {
+  padding-top: 2rem;
+  padding-left: 4rem;
+  padding-right: 4rem;
+  font-weight: 500;
+  overflow-y: auto;
+
+  .input {
+    color: white;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    --red: #ff748b;
+    --success: #4fd56c;
+    --green: #4fd56c;
+  }
+
+  .form-check {
+    color: white;
+    margin-bottom: 2rem;
+  }
+
+  .controls {
+    display: flex;
+    flex-direction: row;
+    align-content: flex-end;
+    align-items: flex-end;
+    justify-content: flex-end;
+
+    .button {
+      padding-left: 2rem;
+      padding-right: 2rem;
+      margin-bottom: 4rem;
+
+      &.movil {
+        flex-grow: 1;
+      }
+    }
+  }
+}
+</style>
