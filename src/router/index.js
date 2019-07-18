@@ -18,6 +18,11 @@ const routes = [
     name: 'test',
     component: () => import('@/views/Test') // eslint-disable-line no-console
   },
+  {
+    path: '/:tenantId/login',
+    name: 'tenantLogin',
+    component: () => import('@/views/LoginPage')
+  },
 ]
 
 

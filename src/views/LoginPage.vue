@@ -38,6 +38,9 @@
             <h1>
               Ingresar
             </h1>
+            <h1>
+              {{ tenantId }}
+            </h1>
           </div>
           <LoginForm />
         </div>
@@ -62,6 +65,11 @@ export default {
     return {
       side: 'left',
     }
+  },
+  computed: {
+    tenantId() {
+      return this.$route.params.tenantId
+    },
   },
   mounted() {
     this.showProgressBar()
@@ -194,6 +202,7 @@ export default {
           font-size: 1rem;
           text-align: center;
           padding: .5rem 2rem;
+          margin: 0 2px;
         }
       }
     }
