@@ -1,8 +1,8 @@
 <template>
   <b-form
+    class="form"
     @submit.prevent="onSubmit(username, password)"
     @reset.prevent="onReset"
-    class="form"
   >
     <qs-input 
       v-model="username" 
@@ -30,9 +30,16 @@
     />
 
     <div class="form-check">
-      <input class="form-check-input" type="checkbox" id="gridCheck1">
-      <label class="form-check-label" for="gridCheck1">
-          Recordar
+      <input 
+        id="gridCheck1"
+        class="form-check-input" 
+        type="checkbox" 
+      >
+      <label 
+        class="form-check-label" 
+        for="gridCheck1"
+      >
+        Recordar
       </label>
     </div>
 

@@ -64,12 +64,10 @@ export default {
     }
   },
   mounted() {
-    console.log('start')
     this.showProgressBar()
     setTimeout(() => {
-      console.log('change')
       this.side = 'right'
-      this.hideProgressBar()
+      this.hideProgressBar(1000)
     }, 1000)
   }
 }
@@ -117,6 +115,7 @@ export default {
     .progress {
       width: 100%;
       z-index: 9999;
+      margin-bottom: -4px;
     }
 
     &.phone {

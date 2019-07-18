@@ -3,7 +3,10 @@
     :style="progressStyle"
     class="progress"
   >
-    <div :class="barClass" :style="barStyle"></div>
+    <div 
+      :class="barClass" 
+      :style="barStyle"
+    />
   </div>
 </template>
 
