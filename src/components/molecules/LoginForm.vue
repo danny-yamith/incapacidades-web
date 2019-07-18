@@ -41,7 +41,7 @@
         type="submit" 
         variant="primary"
         class="button"
-        :class="[ { movil: isMovile() } ]"
+        :class="[ { phone: isPhone() } ]"
       >
         Aceptar
       </b-button>
@@ -115,9 +115,9 @@ export default {
     .button {
       padding-left: 2rem;
       padding-right: 2rem;
-      margin-bottom: 4rem;
+      margin-bottom: 2rem;
 
-      &.movil {
+      &.phone {
         flex-grow: 1;
       }
     }

@@ -1,7 +1,10 @@
 <template>
-  <div class="login-page">
+  <div 
+    class="login-page"
+    :class="[{ phone: isPhone() }]"
+  >
     <div 
-      v-if="isNotMovile()"
+      v-if="isNotPhone()"
       class="logo"
     >
       <img src="../assets/img/logo.png">
@@ -10,8 +13,16 @@
       class="dual-radial-slicer"
       :primary-side="side"
       :show-controls="false"
-      :class="[ { movile: isMovile() } ]"
+      :class="[ { phone: isPhone() } ]"
     >
+      <template v-slot:top>
+        <QsProgressBar 
+          v-if="isLoading"
+          class="progress"
+          :indeterminate="isLoadingIndeterminate"
+          :percentage="percentageLoaded"
+        />
+      </template>
       <template v-slot:left>
         <div class="left">
           <div class="img-small" />
@@ -38,13 +49,14 @@
 <script>
 import DualRadialSlicer from '@/components/layouts/DualRadialSlicerLayout'
 import LoginForm from '@/components/molecules/LoginForm'
-import { timeout } from 'q';
+import QsProgressBar from '@/components/atoms/QsProgressBar'
 import { setTimeout } from 'timers';
 
 export default {
   components: {
     DualRadialSlicer,
     LoginForm,
+    QsProgressBar,
   },
   data() {
     return {
@@ -53,9 +65,11 @@ export default {
   },
   mounted() {
     console.log('start')
+    this.showProgressBar()
     setTimeout(() => {
       console.log('change')
       this.side = 'right'
+      this.hideProgressBar()
     }, 1000)
   }
 }
@@ -68,6 +82,10 @@ export default {
   background: url('../assets/img/main.jpg');
   display: flex;
   flex-direction: column;
+
+  &.phone {
+    background: #2296F3;
+  }
 
   .logo {
     margin-top: 5%;
@@ -96,7 +114,12 @@ export default {
     margin-top: 5vh;
     box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
 
-    &.movile {
+    .progress {
+      width: 100%;
+      z-index: 9999;
+    }
+
+    &.phone {
       margin: 0;
 
       .left, .right {
@@ -177,6 +200,4 @@ export default {
     }
   }
 }
-
-
 </style>

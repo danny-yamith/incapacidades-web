@@ -3,6 +3,7 @@ import Vue from 'vue'
 
 import menu from '@/store/menu'
 import login from '@/store/login'
+import loading from '@/store/loading'
 
 Vue.use(Vuex)
 
@@ -22,7 +23,6 @@ const getters = {
   token: state => state.session && state.session.token
     ? state.session.token
     : null,
-  
 }
 
 const mutations = {
@@ -52,6 +52,7 @@ const store = new Vuex.Store({
   modules: {
     menu,
     login,
+    loading,
   },
   state: state(),
   getters,

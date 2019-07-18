@@ -1,16 +1,14 @@
 
-function isMovile(){
-  console.log(this.$mq)
+function isPhone(){
   return this.$mq == 'xs'
     || this.$mq == 'sm'
 }
 
-function isNotMovile(){
-  return !this.isMovile()
+function isNotPhone(){
+  return !this.isPhone()
 }
 
 function isTablet(){
-  console.log(this.$mq)
   return this.$mq == 'md'
 }
 
@@ -19,7 +17,7 @@ function isNotTablet(){
 }
 
 function isDesktop(){
-  return this.isNotMovile() && this.isNotTablet()
+  return this.isNotPhone() && this.isNotTablet()
 }
 
 function isNotDesktop(){
@@ -28,8 +26,8 @@ function isNotDesktop(){
 
 export default {
   methods: {
-    isMovile,
-    isNotMovile,
+    isPhone,
+    isNotPhone,
     isTablet,
     isNotTablet,
     isDesktop,

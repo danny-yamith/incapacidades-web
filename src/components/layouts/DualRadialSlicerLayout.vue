@@ -1,7 +1,8 @@
 <template>
   <div class="dual-radial-slicer-layout">
+    <slot name="top" />
     <div 
-      v-if="isMovile()"
+      v-if="isPhone() || isTablet()"
       class="box" 
     >
       <transition 
@@ -25,7 +26,7 @@
       </transition>
     </div>
     <div 
-      v-if="isDesktop() || isTablet()"
+      v-if="isDesktop()"
       class="box" 
     >
       <div class="side left">
