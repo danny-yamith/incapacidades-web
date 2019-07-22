@@ -1,7 +1,10 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import store from '@/store'
 
-import LoginPage from '../views/LoginPage'
+import LoginPage from '@/views/LoginPage'
+import QsAppShell from '@/components/layouts/QsAppShell'
+import EmptyRouteView from '@/components/atoms/EmptyRouteView'
 
 // import store from '../store'
 
@@ -9,19 +12,36 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/',
-    name: 'home',
-    component: LoginPage,
+    path: '/:tenantId',
+    component: EmptyRouteView,
+    children: [
+      {
+        path: 'login',
+        name: 'login',
+        component: () => import('@/views/LoginPage'),
+      },
+      {
+        path: '',
+        component: () => import('@/components/layouts/QsAppShell'),
+        children: [
+          {
+            path: 'incapacidades',
+            name: 'incapacidades',
+            component: () => import('@/views/IncapacidadesPage'),
+          },
+          {
+            path: 'accidentes',
+            name: 'accidentes',
+            component: () => import('@/views/AccidentesPage')
+          },
+        ],
+      },
+    ],
   },
   {
     path: '/test',
     name: 'test',
-    component: () => import('@/views/Test') // eslint-disable-line no-console
-  },
-  {
-    path: '/:tenantId/login',
-    name: 'tenantLogin',
-    component: () => import('@/views/LoginPage')
+    component: () => import('@/views/Test'),
   },
 ]
 
@@ -49,5 +69,10 @@ var router = new VueRouter({
 //     }
 //   }
 // })
+
+router.afterEach((to, from) => {
+  store.dispatch('loading/showProgress')
+  store.dispatch('loading/hideProgress', 2000)
+})
 
 export default router

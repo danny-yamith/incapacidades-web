@@ -18,7 +18,6 @@
       <template v-slot:top>
         <QsProgressBar 
           v-if="isLoading"
-          class="progress"
           :indeterminate="isLoadingIndeterminate"
           :percentage="percentageLoaded"
         />
@@ -34,7 +33,7 @@
       </template>
       <template v-slot:right>
         <div class="right">
-          <div class="options">
+          <div class="title">
             <h1>
               Ingresar
             </h1>
@@ -51,7 +50,7 @@
 
 <script>
 import DualRadialSlicer from '@/components/layouts/DualRadialSlicerLayout'
-import LoginForm from '@/components/molecules/LoginForm'
+import LoginForm from '@/components/modules/LoginForm'
 import QsProgressBar from '@/components/atoms/QsProgressBar'
 import { setTimeout } from 'timers';
 
@@ -75,7 +74,7 @@ export default {
     this.showProgressBar()
     setTimeout(() => {
       this.side = 'right'
-      this.hideProgressBar(1000)
+      this.hideProgressBar(2000)
     }, 1000)
   }
 }
@@ -123,6 +122,8 @@ export default {
     .progress {
       width: 100%;
       z-index: 9999;
+      position: relative;
+      top: -4px;
       margin-bottom: -4px;
     }
 
@@ -188,13 +189,15 @@ export default {
 
     .right {
       background: #10243D;
+      padding-top: 2rem;
 
-      .options {
-        margin-top: 5vh;
+      .title {
+        margin-top: 2rem;
         display: flex;
         flex-direction: row;
         justify-content: flex-end;
         padding: 0 2rem;
+        margin: 0;
 
         h1 {
           color: white;

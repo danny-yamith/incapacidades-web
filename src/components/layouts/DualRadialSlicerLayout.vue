@@ -19,7 +19,7 @@
         <div 
           v-if="side == 'right'" 
           key="right"
-          class="side right" 
+          class="side" 
         >
           <slot name="right" />
         </div>
@@ -32,7 +32,7 @@
       <div class="side left">
         <slot name="left" />
       </div>
-      <div class="side right">
+      <div class="side">
         <slot name="right" />
       </div>
     </div>
@@ -87,6 +87,7 @@ export default {
 .dual-radial-slicer-layout {
   display: flex;
   flex-direction: column;
+  position: relative;
 
   .box {
     display: flex;

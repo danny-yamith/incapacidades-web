@@ -1,19 +1,29 @@
 <template>
   <div>
-    <b-form-group
-      :label="label"
+    <b-form-group 
+      :label="label" 
       :description="description"
+      :label-for="name"
       :style="formGroupStyle"
     >
-      <b-form-input
+      <b-form-select
         v-model="model"
         v-bind="$attrs"
+        :options="options"
         :name="name"
-        :type="type"
-        :placeholder="placeholder"
-        :state="inputState"
-      />
-    </b-form-group>  
+        :state="state"
+      >
+        <template slot="first">
+          <option 
+            v-if="emptyOption"
+            :value="null" 
+            disabled
+          >
+            {{ emptyOption }}
+          </option>
+        </template>
+      </b-form-select>
+    </b-form-group>
     <div 
       v-if="error"
       class="error"
@@ -29,11 +39,7 @@ export default {
     $validator: '$validator',
   },
   props: {
-    name: {
-      type: String,
-      required: true,
-    },
-    label: {
+    emptyOption: {
       type: String,
       required: false,
       default: null,
@@ -43,19 +49,24 @@ export default {
       required: false,
       default: null,
     },
-    placeholder: {
+    options: {
+      type: Array,
+      required: true,
+    },
+    value: {
+      type: [ Object, String, Number ],
+      required: false,
+      default: null,
+    },
+    label: {
       type: String,
       required: false,
       default: null,
     },
-    value: {
-      type: [String, Number],
-      required: true,
-    },
-    type: {
+    name: {
       type: String,
       required: false,
-      default: 'text',
+      default: null,
     },
     field: {
       type: Object,
@@ -70,24 +81,24 @@ export default {
   },
   computed: {
     model: {
-      get() {
+      get(){
         return this.value
       },
-      set($event) {
-        this.$emit('input', $event)
-      },
+      set(value){
+        this.$emit('input', value)
+      }
     },
-    isDirty(){
+    isDirty() {
       return this.field ? this.field.dirty : false
     },
-    inputState() {
+    state() {
       return !this.field
         ? null
         : !this.field.validated
           ? null
           : this.field.validated && this.field.valid
-    }
-  },
+    },
+  }
 }
 </script>
 
@@ -95,7 +106,7 @@ export default {
 .error {
   margin-top: .5rem;
   font-size: .8rem;
-  color: var(--danger);
+  color: var(--red);
   text-transform: none;
 }
 </style>

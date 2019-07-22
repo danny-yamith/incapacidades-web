@@ -102,7 +102,7 @@ export default {
     color: white;
     text-transform: uppercase;
     margin-bottom: 2rem;
-    --red: #ff748b;
+    --danger: #ff748b;
     --success: #4fd56c;
     --green: #4fd56c;
   }

@@ -25,6 +25,23 @@ import store from '@/store'
 import App from './App.vue'
 import '@/assets/base.css'
 
+
+axios.interceptors.request.use(function(config){
+  store.dispatch('loading/showProgress')
+  return config
+}, function(error) {
+  store.dispatch('loading/hideProgress', 1000)
+  return Promise.reject(error)
+})
+
+axios.interceptors.response.use(function(response){
+  store.dispatch('loading/hideProgress', 1000)
+  return response
+}, function(error) {
+  store.dispatch('loading/hideProgress', 1000)
+  return Promise.reject(error)
+})
+
 Vue.use(VueAxios, axios)
 Vue.use(BootstrapVue)
 Vue.use(VueTheMask)
@@ -37,7 +54,7 @@ Vue.use(VueMq, {
     lg: 1140,
     xl: Infinity
   },
-  defaultBreakpoint: 'lg' // customize this for SSR
+  defaultBreakpoint: 'lg',
 })
 
 Vue.use(VueProgress)

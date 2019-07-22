@@ -3,15 +3,16 @@
     <b-form-group
       :label="label"
       :description="description"
-      :style="formGroupStyle"
     >
-      <b-form-input
+      <b-form-textarea
         v-model="model"
         v-bind="$attrs"
         :name="name"
         :type="type"
         :placeholder="placeholder"
         :state="inputState"
+        :rows="rows"
+        :max-rows="maxRows"
       />
     </b-form-group>  
     <div 
@@ -29,6 +30,16 @@ export default {
     $validator: '$validator',
   },
   props: {
+    rows: {
+      type: Number,
+      required: false,
+      default: null,
+    },
+    maxRows: {
+      type: Number,
+      required: false,
+      default: null,
+    },
     name: {
       type: String,
       required: true,

@@ -1,7 +1,7 @@
 <template>
   <div 
     :style="progressStyle"
-    class="progress"
+    class="progress-bar"
   >
     <div 
       :class="barClass" 
@@ -70,7 +70,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.progress {
+.progress-bar {
   position: relative;
   height: 4px;
   display: block;
@@ -79,6 +79,8 @@ export default {
   border-radius: 2px;
   background-clip: padding-box;
   overflow: hidden; 
+  margin: 0;
+  padding: 0;
 
   .indeterminate {
     &:before {
