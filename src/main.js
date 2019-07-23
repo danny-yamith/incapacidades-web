@@ -23,6 +23,7 @@ import router from '@/router'
 import store from '@/store'
 
 import App from './App.vue'
+import { baseUrl } from './constants'
 import '@/assets/base.css'
 
 
@@ -43,6 +44,8 @@ axios.interceptors.response.use(function(response){
 })
 
 Vue.use(VueAxios, axios)
+Vue.axios.defaults.baseUrl = baseUrl
+
 Vue.use(BootstrapVue)
 Vue.use(VueTheMask)
 

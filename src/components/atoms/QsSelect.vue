@@ -4,7 +4,6 @@
       :label="label" 
       :description="description"
       :label-for="name"
-      :style="formGroupStyle"
     >
       <b-form-select
         v-model="model"

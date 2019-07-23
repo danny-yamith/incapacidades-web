@@ -28,6 +28,18 @@ const routes = [
             path: 'incapacidades',
             name: 'incapacidades',
             component: () => import('@/views/IncapacidadesPage'),
+            children: [
+              {
+                path: '',
+                name: 'incapacidades',
+                component: () => import('@/components/modules/IncapacidadesForm')
+              },
+              {
+                path: 'admin',
+                name: 'incapacidades-admin',
+                component: () => import('@/components/modules/IncapacidadesAdminForm')
+              },
+            ],
           },
           {
             path: 'accidentes',

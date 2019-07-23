@@ -3,7 +3,6 @@
     <b-form-group
       :label="label"
       :description="description"
-      :style="formGroupStyle"
     >
       <b-form-input
         v-model="model"
