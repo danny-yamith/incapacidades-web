@@ -12,7 +12,7 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/:tenantId',
+    path: '/:poolName',
     component: EmptyRouteView,
     children: [
       {

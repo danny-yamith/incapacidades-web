@@ -1,7 +1,7 @@
 <template>
   <b-form
     class="form"
-    @submit.prevent="onSubmit(username, password)"
+    @submit.prevent="onSubmit"
     @reset.prevent="onReset"
   >
     <qs-input 
@@ -59,6 +59,7 @@
 <script>
 import QsInput from '@/components/atoms/QsInput'
 import { mapActions, mapState } from 'vuex';
+import md5 from 'blueimp-md5'
 
 export default {
   components: {
@@ -74,16 +75,24 @@ export default {
     ...mapState('login', {
       loading: 'loading',
     }),
+    poolName() {
+      return this.$route.params.poolName
+    },
+    md5pass() {
+      return md5(this.password)
+        .toUpperCase()
+    }
   },
   methods: {
     ...mapActions('login',{
       logIn: 'logIn',
       logOut: 'logOut',
     }),
-    onSubmit(username, password) {
+    onSubmit() {
       this.logIn({ 
         username: this.username,
-        password: this.password, 
+        password: this.md5pass, 
+        poolName: this.poolName
       })
     },
   },

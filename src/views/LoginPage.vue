@@ -38,7 +38,7 @@
               Ingresar
             </h1>
             <h1>
-              {{ tenantId }}
+              {{ poolName }}
             </h1>
           </div>
           <LoginForm />
@@ -66,8 +66,8 @@ export default {
     }
   },
   computed: {
-    tenantId() {
-      return this.$route.params.tenantId
+    poolName() {
+      return this.$route.params.poolName
     },
   },
   mounted() {

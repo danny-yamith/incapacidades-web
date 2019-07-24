@@ -4,24 +4,33 @@ const TAG = `login.js`;
 
 const state = () => ({
   loading: false,
-  token: null,
+  session: null,
+  perProfCfg: null,
   error: null,
 })
 
 const getters = {
+  token: state => state.session ? state.session.sessionId : null,
+  user: state => state.session ? state.session.employee : null,
+  canRegisterNoveltiesToAnyEmployee: state => state.perProfCfg
+    ? state.perProfCfg.regAnyAttenNov 
+    : false,
 }
 
 const mutations = {
-  loadToken(state){
+  startLoading(state){
     state.loading = true
   },
-  setToken(state, token){
+  setSession(state, session){
     state.loading = false
-    state.token = token
+    state.session = session
   },
-  loginError(state, error){
+  setError(state, error){
     state.loading = false
     state.error = error
+  },
+  setPerProfCfg(state, perProfCfg){
+    state.perProfCfg = perProfCfg
   },
   clear(statePrm) {
     Object.assign(statePrm, state())
@@ -29,15 +38,25 @@ const mutations = {
 }
 
 const actions = {
-  logIn({ commit }, { username, password }){
-    // TODO - perform login in server
-    console.log(
-      TAG,
-      'TODO - perform login in server',
-      username, password)
-    commit('loadToken')
-    setTimeout(2000, () => {
-      commit('setToken', 'A token from server')
+  logIn({ commit, dispatch }, { username, password, poolName, type = 'web' }){
+    commit('startLoading')
+
+    axios.post('/employee/login', {
+      login: username,
+      pass: password,
+      poolName,
+      type
+    }).then(res => {
+      console.log(res)
+      commit('setSession', res.data)
+      return res.data
+    }).then(session => {
+      console.log('session', session)
+      return dispatch('loadPerProfConf', session.sessionId)
+    }).catch(err => {
+      console.log(err)
+      commit('setError', err)
+      throw err
     })
   },
   logOut({ commit }){
@@ -47,6 +66,23 @@ const actions = {
       'TODO - peform lougout in server')
     commit('clear')
   },
+  loadPerProfConf({commit, dispatch}, token){
+    axios.defaults.headers.common = {
+      "Authorization": token,
+    }
+
+    commit('startLoading')
+
+    return axios.get('/perProfCfg/getFromSession')
+      .then(res => {
+        console.log('perProfCfg', res.data)
+        commit('setPerProfCfg', res.data)
+      }).catch(err => {
+        console.log(err)
+        commit('setError', err)
+        throw err
+      })
+  }
 }
 
 export default {

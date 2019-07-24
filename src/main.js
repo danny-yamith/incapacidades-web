@@ -6,7 +6,6 @@ import moment from 'moment'
 import VueMomentLib from 'vue-moment-lib'
 import VueTheMask from 'vue-the-mask'
 import VueMq from 'vue-mq'
-import VueProgress from 'vue-progress-path'
 
 import es from '@/lang/validation-messages-es'
 import VeeValidate from 'vee-validate'
@@ -44,7 +43,7 @@ axios.interceptors.response.use(function(response){
 })
 
 Vue.use(VueAxios, axios)
-Vue.axios.defaults.baseUrl = baseUrl
+Vue.axios.defaults.baseURL = baseUrl
 
 Vue.use(BootstrapVue)
 Vue.use(VueTheMask)
@@ -59,8 +58,6 @@ Vue.use(VueMq, {
   },
   defaultBreakpoint: 'lg',
 })
-
-Vue.use(VueProgress)
 
 Vue.use(VeeValidate, {
   locale: 'es',
