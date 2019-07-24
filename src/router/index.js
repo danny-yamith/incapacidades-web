@@ -6,8 +6,6 @@ import LoginPage from '@/views/LoginPage'
 import QsAppShell from '@/components/layouts/QsAppShell'
 import EmptyRouteView from '@/components/atoms/EmptyRouteView'
 
-// import store from '../store'
-
 Vue.use(VueRouter)
 
 const routes = [
@@ -28,18 +26,6 @@ const routes = [
             path: 'incapacidades',
             name: 'incapacidades',
             component: () => import('@/views/IncapacidadesPage'),
-            children: [
-              {
-                path: '',
-                name: 'incapacidades',
-                component: () => import('@/components/modules/IncapacidadesForm')
-              },
-              {
-                path: 'admin',
-                name: 'incapacidades-admin',
-                component: () => import('@/components/modules/IncapacidadesAdminForm')
-              },
-            ],
           },
           {
             path: 'accidentes',
@@ -82,9 +68,20 @@ var router = new VueRouter({
 //   }
 // })
 
-router.afterEach((to, from) => {
+router.beforeEach((to, from, next) => {
   store.dispatch('loading/showProgress')
   store.dispatch('loading/hideProgress', 2000)
+  
+  if(to.name != 'login' && store.state.login.session == null){
+    next({ 
+      replace: true,
+      name: 'login',
+      params: to.params,
+      query: to.query,
+    })
+  } else {
+    next()
+  }
 })
 
 export default router

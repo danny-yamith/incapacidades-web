@@ -5,26 +5,40 @@
       <p>Registro de incapacidades</p>
     </template>
     <template v-slot:content>
-      <!-- <IncapacidadesForm class="col-12 col-md-10" /> -->
-      <router-view />
+      <IncapacidadesAdminForm 
+        v-if="isAdmin" 
+        class="col-12 col-md-10" 
+      />
+      <IncapacidadesForm 
+        v-else 
+        class="col-12 col-md-10" 
+      />
     </template>
   </QsModuleLayout>
 </template>
 
 <script>
 import QsModuleLayout from '@/components/layouts/QsModuleLayout'
-// import IncapacidadesForm from '@/components/modules/IncapacidadesForm'
+import { mapGetters } from 'vuex';
+import IncapacidadesForm from '@/components/modules/IncapacidadesForm'
+import IncapacidadesAdminForm from '@/components/modules/IncapacidadesAdminForm'
 
 export default {
   components: {
     QsModuleLayout,
-    // IncapacidadesForm,
+    IncapacidadesForm,
+    IncapacidadesAdminForm,
   },
   data() {
     return {
       json: 'empty',
     }
   },
+  computed: {
+    ...mapGetters('login', {
+      isAdmin: 'canRegisterNoveltiesToAnyEmployee',
+    }),
+  }
 }
 </script>
 

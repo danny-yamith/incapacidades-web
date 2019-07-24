@@ -72,9 +72,6 @@ export default {
     }
   },
   computed: {
-    ...mapState('login', {
-      loading: 'loading',
-    }),
     poolName() {
       return this.$route.params.poolName
     },
@@ -89,10 +86,18 @@ export default {
       logOut: 'logOut',
     }),
     onSubmit() {
+      this.showProgressBar()
       this.logIn({ 
         username: this.username,
         password: this.md5pass, 
         poolName: this.poolName
+      }).then(res => {
+        console.log('loged In')
+        console.log(res)
+        this.hideProgressBar()
+        this.$router.push({ name: 'incapacidades' })
+      }).catch(err => {
+        this.hideProgressBar()
       })
     },
   },

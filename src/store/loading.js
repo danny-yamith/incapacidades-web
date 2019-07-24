@@ -21,6 +21,9 @@ const mutations = {
     state.loadingIndicator.indeterminate = indeterminate
     state.loadingIndicator.percentage = indeterminate ? 0 : percentage
   },
+  clearState(statePrm) {
+    Object.assign(statePrm, state())
+  },
 }
 
 const actions = {

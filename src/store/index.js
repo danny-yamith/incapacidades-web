@@ -2,7 +2,6 @@ import Vuex from 'vuex'
 import Vue from 'vue'
 import VuexPersistence from 'vuex-persist'
 
-import menu from '@/store/menu'
 import login from '@/store/login'
 import loading from '@/store/loading'
 
@@ -18,6 +17,10 @@ const mutations = {
 }
 
 const actions = {
+  clearAllState({ commit }){
+    commit('login/clearState')
+    commit('loading/clearState')
+  }
 }
 
 const vuexLocal = new VuexPersistence({
@@ -26,7 +29,6 @@ const vuexLocal = new VuexPersistence({
 
 const store = new Vuex.Store({
   modules: {
-    menu,
     login,
     loading,
   },

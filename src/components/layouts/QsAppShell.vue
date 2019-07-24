@@ -8,12 +8,7 @@
         <div class="menu row" />
       </div>
       <div class="content col p-0 d-flex flex-column">
-        <QsNavbar class="nav-bar">
-          <b-navbar-brand href="#">
-            NavBar
-          </b-navbar-brand>
-          <b-navbar-toggle target="nav-collapse" />
-        </QsNavbar>
+        <QsNavbar class="nav-bar" />
         <div class="main flex-grow-1">
           <router-view />
         </div>

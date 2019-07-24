@@ -3,7 +3,6 @@ import axios from 'axios'
 const TAG = `login.js`;
 
 const state = () => ({
-  loading: false,
   session: null,
   perProfCfg: null,
   error: null,
@@ -18,30 +17,24 @@ const getters = {
 }
 
 const mutations = {
-  startLoading(state){
-    state.loading = true
-  },
   setSession(state, session){
-    state.loading = false
     state.session = session
   },
   setError(state, error){
-    state.loading = false
     state.error = error
   },
   setPerProfCfg(state, perProfCfg){
     state.perProfCfg = perProfCfg
   },
-  clear(statePrm) {
+  clearState(statePrm) {
     Object.assign(statePrm, state())
   },
 }
 
 const actions = {
   logIn({ commit, dispatch }, { username, password, poolName, type = 'web' }){
-    commit('startLoading')
 
-    axios.post('/employee/login', {
+    return axios.post('/employee/login', {
       login: username,
       pass: password,
       poolName,
@@ -59,12 +52,11 @@ const actions = {
       throw err
     })
   },
-  logOut({ commit }){
-    // TODO - perform logout in server
-    console.log(
-      TAG,
-      'TODO - peform lougout in server')
-    commit('clear')
+  logOut({ dispatch }){
+    dispatch('clearAllState', null, { root: true })
+    return new Promise(function(resolve, reject){
+      resolve()
+    })
   },
   loadPerProfConf({commit, dispatch}, token){
     axios.defaults.headers.common = {

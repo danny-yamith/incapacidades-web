@@ -5,6 +5,31 @@
       @submit.prevent="onSubmit()"
       @reset.prevent="onReset"
     >
+
+      <div class="form-row row justify-content-between align-items-end">
+        <QsInput
+          v-model="form.id" 
+          v-validate="{ required: true, min_value: 1, integer: true, }"
+          name="id"
+          label="Cedula del empleado"
+          type="text"
+          data-vv-as="Cedula del empleado"
+          placeholder="Ingrese la cedula del empleado"
+          :field="fields['id']"
+          :error="errors.first('id')"
+          class="col-12 col-md-6"
+        />
+
+        <QsInput
+          v-model="employeeName" 
+          name="employeeName"
+          label="Nombre del empleado" 
+          type="text"
+          class="col-12 col-md-6"
+          :disabled="true"
+        />
+      </div>
+
       <div class="form-row row justify-content-between align-items-end">
         <QsSelect
           v-model="form.company"
@@ -102,6 +127,7 @@ const emptyFormData = () => ({
   company: null,
   description: '',
   startDate: '',
+  id: '',
 })
 
 export default {
@@ -119,6 +145,7 @@ export default {
         { value: { C: '3PO' }, text: 'This is an option with object value' },
         { value: 'd', text: 'This one is disabled', disabled: true }
       ],
+      employeeName: '',
     }
   },
   computed: {
