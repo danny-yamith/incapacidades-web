@@ -3,6 +3,7 @@
     <b-form-group
       :label="label"
       :description="description"
+      :style="{ marginBottom: 0 }"
     >
       <b-form-textarea
         v-model="model"

@@ -9,6 +9,7 @@ import VueMq from 'vue-mq'
 
 import es from '@/lang/validation-messages-es'
 import VeeValidate from 'vee-validate'
+import '@/validators'
 
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'

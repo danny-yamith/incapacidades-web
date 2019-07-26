@@ -2,10 +2,41 @@
   <div>
     <b-form
       class="form p-4"
-      @submit.prevent="onSubmit()"
+      @submit.prevent="onSubmit"
       @reset.prevent="onReset"
     >
-      <div class="form-row row justify-content-between align-items-end">
+      <div class="form-row row justify-content-between align-items-end align-items-lg-start my-2">
+        <QsSelect
+          v-model="form.cause"
+          v-validate="{required: true}"
+          name="cause"
+          label="Causa"
+          data-vv-as="Causa"
+          empty-option="Seleccione la causa"
+          :options="causeOptions"
+          class="col-12 col-md-6"
+          :disabled="isCauseSelectDisabled"
+          :field="fields['cause']"
+          :error="errors.first('cause')"
+        />
+
+        <QsInput
+          v-if="showDiagnosisOption"
+          v-model="cie10"
+          v-validate="{required: true, included: cie10TextOptions}"
+          name="cie10"
+          label="Diagnóstico"
+          type="text"
+          data-vv-as="Diagnóstico"
+          placeholder="Seleccione un diagnóstico"
+          class="col-12 col-md-6"
+          :options="cie10Options"
+          :field="fields['cie10']"
+          :error="errors.first('cie10')"
+        />
+      </div>
+
+      <div class="form-row row justify-content-between align-items-end align-items-lg-start my-2">
         <QsSelect
           v-model="form.company"
           v-validate="{required: true}"
@@ -13,8 +44,11 @@
           label="EPS/ARP"
           data-vv-as="EPS/ARP"
           empty-option="Seleccione EPS/ARP"
-          :options="options"
+          :options="entityOptions"
           class="col-12 col-md-6"
+          :disabled="isEntitySelectDisabled"
+          :field="fields['company']"
+          :error="errors.first('company')"
         />
 
         <QsInput
@@ -31,7 +65,7 @@
         />
       </div>
 
-      <div class="form-row row justify-content align-items-end">
+      <div class="form-row row justify-content align-items-end align-items-md-start my-2">
         <QsInput
           v-model="form.startDate" 
           v-validate="{ required: true }"
@@ -55,7 +89,7 @@
         />
       </div>
 
-      <div class="form-row row justify-content-between">
+      <div class="form-row row justify-content-between my-2">
         <QsTextArea
           v-model="form.description" 
           v-validate="{ required: true, min: 15, }"
@@ -102,6 +136,8 @@ const emptyFormData = () => ({
   company: null,
   description: '',
   startDate: '',
+  cause: null,
+  cie10: null,
 })
 
 export default {
@@ -113,12 +149,10 @@ export default {
   data() {
     return {
       form: emptyFormData(),
-      options: [
-        { value: 'a', text: 'This is First option' },
-        { value: 'b', text: 'Selected Option' },
-        { value: { C: '3PO' }, text: 'This is an option with object value' },
-        { value: 'd', text: 'This one is disabled', disabled: true }
-      ],
+      cie10: '',
+      perEntityList: null,
+      perCauseList: null,
+      perCie10List: null
     }
   },
   computed: {
@@ -129,12 +163,112 @@ export default {
           .format('DD/MM/YYYY') 
         : ''
     },
+    showDiagnosisOption() {
+      if(this.form.cause != null){
+        return this.perCauseList.find(item => item.id == this.form.cause).cie10
+      }
+      return false
+    },
+    isEntitySelectDisabled(){
+      return !this.perEntityList
+    },
+    isCauseSelectDisabled() {
+      return !this.perCauseList
+    },
+    isCie10SelectDisabled(){
+      return !this.perCie10List
+    },
+    entityOptions() {
+      return !this.perEntityList
+        ? []
+        : this.perEntityList
+          .map(item => ({ 
+              value: item.id,
+              text: item.name,
+              disabled: false,
+          }))
+    },
+    causeOptions() {
+      return !this.perCauseList
+        ? []
+        : this.perCauseList
+          .map(item => ({
+            value: item.id,
+            text: item.name,
+            disabled: false
+          }))
+    },
+    cie10Options(){
+      return !this.perCauseList || this.cie10.length <= 2
+        ? []
+        : this.perCie10List
+          .map(item => {
+            item.label = `[${item.cod}] ${item.description}`
+            return item
+          })
+          .filter(item => { 
+            return item.description.includes(this.cie10.toUpperCase())
+          })
+          .slice(0,10)
+          .map(item => ({
+            value: item.description,
+            text: item.label,
+          }))
+    },
+    cie10TextOptions() {
+      return !this.perCie10List
+        ? []
+        : this.perCie10List
+          .map(item => item.description)
+    },
+  },
+  created() {
+    this.showProgressBar()
+    Promise.all([
+      this.getEntities(),
+      this.getCauses(),
+      this.getCie10()
+    ]).then(([entities, causes, cie10]) => {
+      this.hideProgressBar()
+      this.perEntityList = entities.data
+      this.perCauseList = causes.data
+      this.perCie10List = cie10.data
+    }).catch(err => {
+      this.error = err
+      this.hideProgressBar()
+      console.log(err)
+    })
   },
   methods: {
+    onSubmit(){
+      this.$validator.validateAll().then(valid => {
+        if(valid){
+          // TODO - submit form and create incapacity
+          console.log('Submitted valid form')
+        } else {
+          console.log('Invalid')
+        }
+      })
+    },
     onReset() {
       this.form = emptyFormData()
       this.$validator.reset()
-    }
+    },
+    getEntities(){
+      return this.axios.get('/perEntity', {
+        params: { type: 'ips'}
+      }) 
+    },
+    getCauses(){
+      return this.axios.get('/perCause', {
+        params: {
+          type: 'inc',
+        },
+      })   
+    },
+    getCie10(){
+      return this.axios.get('/perCie10')
+    },
   }
 }
 </script>

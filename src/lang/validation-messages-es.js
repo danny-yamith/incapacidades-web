@@ -57,7 +57,11 @@ const messages = {
   regex: (field) => `El formato del campo '${field}' no es válido.`,
   required: (field) => `El campo '${field}' es obligatorio.`,
   size: (field, [size]) => `El campo '${field}' debe ser menor a ${formatFileSize(size)}.`,
-  url: (field) => `El campo '${field}' no es una URL válida.`
+  url: (field) => `El campo '${field}' no es una URL válida.`,
+  exist(field, [ searchTermValue, searchTermName, loading ]) {
+    if(!searchTermValue) return `No se puede buscar un registro con el '${searchTermName}' vacio`
+    return `El '${field}' no ha sido encontrado con el '${searchTermName}': ${searchTermValue}`
+  },
 };
 
 const locale = {

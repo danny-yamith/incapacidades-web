@@ -37,8 +37,7 @@ const actions = {
     commit('setLoadingIndicatorVisibility', true)
     commit('setLoadingIndicator', { indeterminate: false, percentage: per  })
   },
-  hideProgress({ commit }, millis){
-    millis = millis ? millis : 0
+  hideProgress({ commit }, millis = 1000){
     setTimeout(() => commit('setLoadingIndicatorVisibility', false), millis)
   },
 }

@@ -222,7 +222,6 @@ export default {
       this.testInput = ''
       console.log('testInput cleared', this.testInput)
       this.$validator.reset();
-      console.log('reset')
     },
   }
 }

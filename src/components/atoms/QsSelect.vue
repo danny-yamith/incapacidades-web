@@ -4,6 +4,7 @@
       :label="label" 
       :description="description"
       :label-for="name"
+      :style="{ marginBottom: 0 }"
     >
       <b-form-select
         v-model="model"
@@ -16,7 +17,6 @@
           <option 
             v-if="emptyOption"
             :value="null" 
-            disabled
           >
             {{ emptyOption }}
           </option>
@@ -77,6 +77,11 @@ export default {
       required: false,
       default: null,
     },
+    validate: {
+      type: Object,
+      required: false,
+      default: null,
+    },
   },
   computed: {
     model: {
@@ -86,6 +91,12 @@ export default {
       set(value){
         this.$emit('input', value)
       }
+    },
+    required() {
+      console.log(this.validate)
+      return this.validate && this.validate.required 
+        ? this.validate.required 
+        : false
     },
     isDirty() {
       return this.field ? this.field.dirty : false

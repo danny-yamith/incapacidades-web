@@ -2,8 +2,6 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import store from '@/store'
 
-import LoginPage from '@/views/LoginPage'
-import QsAppShell from '@/components/layouts/QsAppShell'
 import EmptyRouteView from '@/components/atoms/EmptyRouteView'
 
 Vue.use(VueRouter)
@@ -17,6 +15,11 @@ const routes = [
         path: 'login',
         name: 'login',
         component: () => import('@/views/LoginPage'),
+      },
+      {
+        path: '/test',
+        name: 'test',
+        component: () => import('@/views/Test'),
       },
       {
         path: '',
@@ -35,11 +38,6 @@ const routes = [
         ],
       },
     ],
-  },
-  {
-    path: '/test',
-    name: 'test',
-    component: () => import('@/views/Test'),
   },
 ]
 

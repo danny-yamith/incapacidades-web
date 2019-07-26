@@ -9,6 +9,10 @@
       </div>
       <div class="content col p-0 d-flex flex-column">
         <QsNavbar class="nav-bar" />
+        <QsProgressBar
+          v-if="isLoading"
+          :indeterminate="isLoadingIndeterminate"
+        />
         <div class="main flex-grow-1">
           <router-view />
         </div>
@@ -19,10 +23,12 @@
 
 <script>
 import QsNavbar from '@/components/atoms/QsNavbar'
+import QsProgressBar from '@/components/atoms/QsProgressBar'
  
 export default {
   components: {
     QsNavbar,
+    QsProgressBar,
   },
   mounted() {
     this.$router.push({

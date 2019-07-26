@@ -3,6 +3,7 @@
     <b-form-group
       :label="label"
       :description="description"
+      :style="{ marginBottom: 0 }"
     >
       <b-form-input
         v-model="model"
@@ -11,6 +12,12 @@
         :type="type"
         :placeholder="placeholder"
         :state="inputState"
+        :list="name"
+      />
+      <b-form-datalist
+        v-if="options"
+        :id="name"
+        :options="options"
       />
     </b-form-group>  
     <div 
@@ -63,6 +70,11 @@ export default {
     },
     error: {
       type: String,
+      required: false,
+      default: null,
+    },
+    options: {
+      type: Array,
       required: false,
       default: null,
     },
