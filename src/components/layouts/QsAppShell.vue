@@ -1,19 +1,21 @@
 <template>
   <div class="qs-app-shell container-fluid no-gutters">
     <div class="app-shell row h-100">
-      <div class="side-nav col-3">
+      <div class="side-nav col-3 d-flex flex-column h-100 shadow">
         <div class="title row">
           <!-- <img src="../../assets/img/logo.png"> -->
         </div>
-        <div class="menu row" />
+        <div class="menu row flex-grow-1">
+          <QsMenu />
+        </div>
       </div>
-      <div class="content col p-0 d-flex flex-column">
+      <div class="content col offset-md-3 p-0 d-flex flex-column">
         <QsNavbar class="nav-bar" />
         <QsProgressBar
           v-if="isLoading"
           :indeterminate="isLoadingIndeterminate"
         />
-        <div class="main flex-grow-1">
+        <div class="main d-flex flex-grow-1">
           <router-view />
         </div>
       </div>
@@ -24,11 +26,13 @@
 <script>
 import QsNavbar from '@/components/atoms/QsNavbar'
 import QsProgressBar from '@/components/atoms/QsProgressBar'
+import QsMenu from '@/components/molecules/QsMenu'
  
 export default {
   components: {
     QsNavbar,
     QsProgressBar,
+    QsMenu,
   },
   mounted() {
     this.$router.push({
@@ -41,11 +45,28 @@ export default {
 <style lang="scss" scoped>
 .qs-app-shell {
   .app-shell {
-    .title {
-      background: red;
+    height: 100vh;
+    overflow-y: auto;
+
+    .side-nav {
+      z-index: 1;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+
+      .title {
+        height: 100px;
+        background: #343A40;
+      }
+      .menu {
+        background: #FFFFFF;
+      }
     }
     .content {
+      height: 100vh;
       .main {
+        height: 100vh;
         overflow-y: auto;
       }
     }

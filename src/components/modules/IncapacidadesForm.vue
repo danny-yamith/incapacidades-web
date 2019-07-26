@@ -229,14 +229,14 @@ export default {
       this.getCauses(),
       this.getCie10()
     ]).then(([entities, causes, cie10]) => {
-      this.hideProgressBar()
       this.perEntityList = entities.data
       this.perCauseList = causes.data
       this.perCie10List = cie10.data
+      this.hideProgressBar()
     }).catch(err => {
       this.error = err
-      this.hideProgressBar()
       console.log(err)
+      this.hideProgressBar()
     })
   },
   methods: {

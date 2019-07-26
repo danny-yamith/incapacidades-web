@@ -1,6 +1,6 @@
 <template>
   <b-navbar 
-    class="navbar" 
+    class="navbar shadow-sm" 
     type="dark" 
     variant="dark"
   >
@@ -59,5 +59,6 @@ export default {
 
 <style lang="scss" scoped>
 .navbar {
+  z-index: 2;
 }
 </style>
