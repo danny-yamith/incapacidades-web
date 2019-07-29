@@ -68,6 +68,7 @@ Vue.use(VeeValidate, {
 })
 
 moment.locale('es')
+moment.defaultFormat = `YYYY-MM-DDTHH:mm:ss.SSSZ`
 Vue.use(VueMomentLib)
 
 Vue.mixin(titleMixin)

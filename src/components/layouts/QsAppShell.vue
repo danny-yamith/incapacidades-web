@@ -27,12 +27,24 @@
 import QsNavbar from '@/components/atoms/QsNavbar'
 import QsProgressBar from '@/components/atoms/QsProgressBar'
 import QsMenu from '@/components/molecules/QsMenu'
+import { mapGetters } from 'vuex';
  
 export default {
   components: {
     QsNavbar,
     QsProgressBar,
     QsMenu,
+  },
+  computed: {
+    ...mapGetters('login', {
+      token: 'token'
+    }),
+  },
+  created() {
+    console.log('shell created')
+    this.axios.defaults.headers.common = {
+      "Authorization": this.token,
+    }
   },
   mounted() {
     this.$router.push({

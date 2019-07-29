@@ -40,7 +40,7 @@ export default {
       user: 'user',
     }),
     userName() {
-      return this.user.firstName
+      return this.user ? this.user.firstName : ''
     },
   },
   methods: {

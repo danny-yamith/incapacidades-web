@@ -92,7 +92,6 @@
       <div class="form-row row justify-content-between my-2">
         <QsTextArea
           v-model="form.description" 
-          v-validate="{ required: true, min: 15, }"
           name="description"
           label="Descripción"
           type="text"
@@ -127,6 +126,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import QsInput from '@/components/atoms/QsInput'
 import QsSelect from '@/components/atoms/QsSelect'
 import QsTextArea from '@/components/atoms/QsTextArea'
@@ -138,6 +138,7 @@ const emptyFormData = () => ({
   startDate: '',
   cause: null,
   cie10: null,
+  employee: null,
 })
 
 export default {
@@ -152,10 +153,14 @@ export default {
       cie10: '',
       perEntityList: null,
       perCauseList: null,
-      perCie10List: null
+      perCie10List: null,
+      perEmployee: null,
     }
   },
   computed: {
+    ...mapGetters('login', {
+      user: 'user',
+    }),
     endDate() {
       return this.form && this.form.startDate 
         ? this.$moment(this.form.startDate, 'YYYY-MM-DD')
@@ -227,11 +232,13 @@ export default {
     Promise.all([
       this.getEntities(),
       this.getCauses(),
-      this.getCie10()
-    ]).then(([entities, causes, cie10]) => {
+      this.getCie10(),
+      this.getPerEmployee(),
+    ]).then(([entities, causes, cie10, perEmployee]) => {
       this.perEntityList = entities.data
       this.perCauseList = causes.data
       this.perCie10List = cie10.data
+      this.perEmployee = perEmployee.data
       this.hideProgressBar()
     }).catch(err => {
       this.error = err
@@ -245,6 +252,26 @@ export default {
         if(valid){
           // TODO - submit form and create incapacity
           console.log('Submitted valid form')
+          let startDate = this.$moment(this.form.startDate, 'YYYY-MM-DD')
+            .format()
+          let endDate = this.$format(this.endDate , 'DD/MM/YYYY')
+            .format()
+
+          console.log(startDate)
+          console.log(endDate)
+
+          // this.axios.post('/perSickLeave', {
+          //   "empId": 1584,
+          //   "regDate":	"2019-07-22T00:00:00.000-05:00",
+          //   "endDate": "2019-07-25T00:00:00.000-05:00",
+          //   "causeId": 23,
+          //   "days": 3,
+          //   "extDays": 0,
+          //   "notes": "",
+          //   "active": true,
+          //   "perCie10Id": null,
+          //   "entityId": 3
+          // })
         } else {
           console.log('Invalid')
         }
@@ -269,6 +296,13 @@ export default {
     getCie10(){
       return this.axios.get('/perCie10')
     },
+    getPerEmployee(){
+      return this.axios.get('/perEmployee', {
+        params: {
+          document: this.user.document
+        }
+      })
+    }
   }
 }
 </script>

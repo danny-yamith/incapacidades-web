@@ -50,7 +50,7 @@
 
         <QsInput
           v-if="showDiagnosisOption"
-          v-model="cie10"
+          v-model="form.cie10"
           v-validate="{required: true, included: cie10TextOptions}"
           name="cie10"
           label="Diagnóstico"
@@ -120,7 +120,6 @@
       <div class="form-row row justify-content-between my-2">
         <QsTextArea
           v-model="form.description" 
-          v-validate="{ required: true, min: 15, }"
           name="description"
           label="Descripción"
           type="text"
@@ -151,6 +150,41 @@
         </b-button>
       </div>
     </b-form>
+
+    <b-modal id="modalOk" v-model="form.showOkModal" title="Información" ok-only>
+      <p>La incapacidad fue registrada con éxito</p>
+      <div slot="modal-footer" class="w-100">
+        <b-button
+          size="sm"
+          class="float-right"
+          @click="form.showOkModal = false"
+        >
+          Aceptar
+        </b-button>
+      </div>
+    </b-modal>
+
+    <b-modal 
+      id="modalError" 
+      v-model="form.showErrorModal" 
+      title="Error" 
+      ok-only
+      header-bg-variant="danger"
+      header-text-variant="light"
+    >
+      <p>{{ form.error }}</p>
+
+      <div slot="modal-footer" class="w-100">
+        <b-button
+          variant="danger"
+          size="sm"
+          class="float-right"
+          @click="form.showErrorModal=false"
+        >
+          Cerrar
+        </b-button>
+      </div>
+    </b-modal>
   </div>
 </template>
 
@@ -167,7 +201,10 @@ const emptyFormData = () => ({
   startDate: '',
   id: '',
   cause: null,
-  cie10: null,
+  cie10: '',
+  showOkModal: false,
+  showErrorModal: false,
+  error: '',
 })
 
 export default {
@@ -179,7 +216,6 @@ export default {
   data() {
     return {
       form: emptyFormData(),
-      cie10: '',
       perEntityList: null,
       perCauseList: null,
       perCie10List: null,
@@ -190,6 +226,11 @@ export default {
     'form.id'() {
       this.getEmployee()
     },
+    'form.showOkModal'(newValue){
+      if(!newValue) {
+        this.onReset()
+      }
+    }
   },
   computed: {
     endDate() {
@@ -206,7 +247,7 @@ export default {
       return false
     },
     employeeName() {
-      return this.employee ? this.employee.firstName : ''
+      return this.employee ? `${this.employee.firstName} ${this.employee.lastName}` : ''
     },
     isEntitySelectDisabled(){
       return !this.perEntityList
@@ -238,7 +279,7 @@ export default {
           }))
     },
     cie10Options(){
-      return !this.perCauseList || this.cie10.length <= 2
+      return !this.perCauseList || this.form.cie10.length <= 2
         ? []
         : this.perCie10List
           .map(item => {
@@ -246,7 +287,7 @@ export default {
             return item
           })
           .filter(item => { 
-            return item.description.includes(this.cie10.toUpperCase())
+            return item.description.includes(this.form.cie10.toUpperCase())
           })
           .slice(0,10)
           .map(item => ({
@@ -273,8 +314,7 @@ export default {
       this.perCie10List = cie10.data
       this.hideProgressBar()
     }).catch(err => {
-      this.error = err
-      console.log(err)
+      this.form.error = err
       this.hideProgressBar()
     })
   },
@@ -283,10 +323,45 @@ export default {
       this.$validator.validateAll().then(valid => {
         if(valid){
           // TODO - submit form and create incapacity
-          console.log('Submitted valid form')
-        } else {
-          console.log('Invalid')
-        }
+          let empId = this.employee.id
+          let regDate = this.$moment(this.form.startDate, 'YYYY-MM-DD')
+            .format()
+          let endDate = this.$moment(this.endDate , 'DD/MM/YYYY')
+            .format()
+          let days = this.form.days
+          let causeId = this.form.cause
+          let extDays = 0
+          let notes = this.form.description
+          let active = true
+
+          let cie10Search =  this.perCie10List.find(item => item.description == this.form.cie10) 
+          let cause = this.perCauseList.find(item => item.id == this.form.cause)
+          let perCie10Id = cie10Search && cause.cie10  ? cie10Search.id : null
+
+          let entityId = this.form.company
+
+          this.axios.post('/perSickLeave', {
+            empId,
+            regDate,
+            endDate,
+            days,
+            causeId,
+            extDays,
+            notes,
+            active,
+            perCie10Id,
+            entityId,
+          })
+          .then(res => {
+            this.form.showOkModal = true
+          })
+          .catch(err => {
+            this.form.error = err.response && err.response.data 
+              ? err.response.data 
+              : 'Error inesperado cliente'
+            this.form.showErrorModal = true
+          })
+        } 
       })
     },
     onReset() {
@@ -296,8 +371,11 @@ export default {
     },
     getEmployee: _.debounce(function getEmployee(){
       this.employee = null
+      if(this.form.id == null 
+        || this.form.id == undefined 
+        ||this.form.id.length == 0) return;
       this.showProgressBar()
-      this.axios.get('/employee', {
+      this.axios.get('/perEmployee', {
         params: { document: this.form.id }
       }).then(res => {
         this.employee = res.data

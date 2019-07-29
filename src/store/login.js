@@ -59,10 +59,6 @@ const actions = {
     })
   },
   loadPerProfConf({commit, dispatch}, token){
-    axios.defaults.headers.common = {
-      "Authorization": token,
-    }
-
     commit('startLoading')
 
     return axios.get('/perProfCfg/getFromSession')
