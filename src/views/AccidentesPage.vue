@@ -1,10 +1,28 @@
 <template>
-  <div>Accidentes Page</div> 
+  <QsModuleLayout>
+    <template v-slot:header>
+      <h1>Accidentes</h1>
+      <p>Registro de accidentes</p>
+    </template>
+
+    <template v-slot:content>
+      <AccidentsForm
+        class="col-12 col-md-10" 
+      />
+    </template>
+  </QsModuleLayout>
 </template>
 
 <script>
-export default {
+import QsModuleLayout from '@/components/layouts/QsModuleLayout'
+import { mapGetters } from 'vuex';
+import AccidentsForm from '@/components/modules/AccidentsForm'
 
+export default {
+  components: {
+    QsModuleLayout,
+    AccidentsForm,
+  },
 }
 </script>
 

@@ -40,14 +40,14 @@ const actions = {
       poolName,
       type
     }).then(res => {
-      console.log(res)
       commit('setSession', res.data)
       return res.data
     }).then(session => {
-      console.log('session', session)
+      axios.defaults.headers = {
+        Authorization: session.sessionId
+      }
       return dispatch('loadPerProfConf', session.sessionId)
     }).catch(err => {
-      console.log(err)
       commit('setError', err)
       throw err
     })

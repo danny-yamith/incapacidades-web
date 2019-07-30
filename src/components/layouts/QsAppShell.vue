@@ -41,15 +41,14 @@ export default {
     }),
   },
   created() {
-    console.log('shell created')
     this.axios.defaults.headers.common = {
       "Authorization": this.token,
     }
   },
   mounted() {
-    this.$router.push({
-      name: 'incapacidades'
-    })
+    // this.$router.push({
+    //   name: 'incapacidades'
+    // })
   },
 }
 </script>
