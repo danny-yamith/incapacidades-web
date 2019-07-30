@@ -1,16 +1,31 @@
 <template>
   <div class="qs-app-shell container-fluid no-gutters">
     <div class="app-shell row h-100">
-      <div class="side-nav col-3 d-flex flex-column h-100 shadow">
-        <div class="title row">
-          <!-- <img src="../../assets/img/logo.png"> -->
+      <transition name="slide-left">
+        <div 
+          v-if="showDrawer"
+          class="side-nav col-8 col-sm-6 col-md-3 d-flex flex-column h-100 shadow"
+        >
+          <div class="title row">
+            <!-- <img src="../../assets/img/logo.png"> -->
+          </div>
+          <div class="menu row flex-grow-1">
+            <QsMenu />
+          </div>
         </div>
-        <div class="menu row flex-grow-1">
-          <QsMenu />
-        </div>
-      </div>
+      </transition>
+      <transition name="opacity">
+        <div 
+          v-if="isPhone() && showMenu"
+          class="col-12 h-100 empty"
+          @click="toggleMenu"
+        />
+      </transition>
       <div class="content col offset-md-3 p-0 d-flex flex-column">
-        <QsNavbar class="nav-bar" />
+        <QsNavbar 
+          class="nav-bar"
+          @toggle-navbar="toggleMenu"
+        />
         <QsProgressBar
           v-if="isLoading"
           :indeterminate="isLoadingIndeterminate"
@@ -35,10 +50,24 @@ export default {
     QsProgressBar,
     QsMenu,
   },
+  data(){
+    return {
+      showMenu: false,
+    }
+  },
   computed: {
     ...mapGetters('login', {
       token: 'token'
     }),
+    showDrawer() {
+      let show = this.isNotPhone() || this.showMenu
+      return show
+    },
+  },
+  watch: {
+    '$mq'(newValue){
+      if(this.isNotPhone()) this.showMenu = false
+    },
   },
   created() {
     this.axios.defaults.headers.common = {
@@ -50,6 +79,11 @@ export default {
     //   name: 'incapacidades'
     // })
   },
+  methods: {
+    toggleMenu() {
+      this.showMenu = !this.showMenu
+    },
+  },
 }
 </script>
 
@@ -60,7 +94,7 @@ export default {
     overflow-y: auto;
 
     .side-nav {
-      z-index: 1;
+      z-index: 3;
       position: absolute;
       top: 0;
       bottom: 0;
@@ -74,6 +108,16 @@ export default {
         background: #FFFFFF;
       }
     }
+
+    .empty {
+      z-index: 1;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      background-color: rgba(0,0,0,.5);
+    }
+
     .content {
       height: 100vh;
       .main {
@@ -83,4 +127,43 @@ export default {
     }
   }
 }
+
+.slide-left-enter-active,
+.slide-left-leave-active {
+  transition-duration: 0.5s;
+  transition-property: height, opacity, transform;
+  transition-timing-function: cubic-bezier(0.55, 0, 0.1, 1);
+  overflow: hidden;
+}
+
+.slide-left-enter {
+  transform: translate(-25em, 0);
+}
+
+.slide-left-leave-active {
+  transform: translate(-25em, 0);
+}
+
+
+
+.opacity-enter-active,
+.opacity-leave-active,
+.opacity-enter-active,
+.opacity-leave-active {
+  transition-duration: 0.5s;
+  transition-property: height, opacity, transform;
+  transition-timing-function: cubic-bezier(0.55, 0, 0.1, 1);
+  overflow: hidden;
+}
+
+.opacity-enter,
+.opacity-leave-active {
+  opacity: 0;
+}
+
+.opacity-leave-active,
+.opacity-enter {
+  opacity: 0;
+}
+
 </style>

@@ -50,25 +50,6 @@ var router = new VueRouter({
   },
 })
 
-// router.beforeEach((to, from, next) => {
-//   const isGuesst = to.matched.some(rec => rec.meta != null && rec.meta.justGuest)
-//   const hasToken = store.getters.token
-
-//   if (isGuesst) {
-//     if (!hasToken) {
-//       next();
-//     } else {
-//       next({name: 'home'});
-//     }
-//   } else {
-//     if (hasToken) {
-//       next();
-//     } else {
-//       next({name: 'login'});
-//     }
-//   }
-// })
-
 router.beforeEach((to, from, next) => {
   store.dispatch('loading/showProgress')
   store.dispatch('loading/hideProgress', 2000)

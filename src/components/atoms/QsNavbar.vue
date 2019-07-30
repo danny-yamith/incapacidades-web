@@ -4,8 +4,11 @@
     type="dark" 
     variant="dark"
   >
-    <b-navbar-brand href="#">
-      NavBar
+    <b-navbar-brand 
+      href="#"
+      @click="toggleNavbar"
+    >
+      {{ isPhone() }}
     </b-navbar-brand>
     <b-navbar-toggle target="nav-collapse" />
 
@@ -52,7 +55,11 @@ export default {
         .then(() => {
           this.$router.push({ name: 'login' })
         })
-    }
+    },
+    toggleNavbar(){
+      console.log('toggleNavbar')
+      this.$emit('toggle-navbar')
+    },
   },
 }
 </script>
