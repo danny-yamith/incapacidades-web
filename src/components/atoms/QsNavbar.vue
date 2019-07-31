@@ -57,7 +57,6 @@ export default {
         })
     },
     toggleNavbar(){
-      console.log('toggleNavbar')
       this.$emit('toggle-navbar')
     },
   },

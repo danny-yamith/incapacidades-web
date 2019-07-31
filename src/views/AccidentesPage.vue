@@ -15,7 +15,6 @@
 
 <script>
 import QsModuleLayout from '@/components/layouts/QsModuleLayout'
-import { mapGetters } from 'vuex';
 import AccidentsForm from '@/components/modules/AccidentsForm'
 
 export default {

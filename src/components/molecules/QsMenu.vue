@@ -11,16 +11,27 @@
           Accidentes
         </router-link>
       </li>
+      <li v-if="isAdmin">
+        <router-link :to="{ name: 'dashboard'}">
+          Dashboard
+        </router-link>
+      </li>
     </ul>
   </nav>
 </template>
 
 <script>
-export default {
+import { mapGetters } from 'vuex'
 
+export default {
+  computed: {
+    ...mapGetters('login', {
+      isAdmin: 'canRegisterNoveltiesToAnyEmployee',
+    }),
+  },
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
 
 </style>
