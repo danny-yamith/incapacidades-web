@@ -13,7 +13,7 @@
             >
           </div>
           <div class="menu row flex-grow-1">
-            <QsMenu />
+            <QsMenu @menu-selected="hideMenu" />
           </div>
         </div>
       </transition>
@@ -86,6 +86,9 @@ export default {
     toggleMenu() {
       this.showMenu = !this.showMenu
     },
+    hideMenu(){
+      this.showMenu = false
+    }
   },
 }
 </script>

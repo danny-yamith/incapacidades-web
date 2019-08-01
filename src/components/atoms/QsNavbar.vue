@@ -5,8 +5,8 @@
     variant="dark"
   >
     <b-navbar-brand 
-      href="#"
       v-if="isPhone()"
+      href="#"
       @click="toggleNavbar"
     >
       <img src="../../assets/img/menu.png">

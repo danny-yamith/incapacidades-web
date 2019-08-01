@@ -2,17 +2,26 @@
   <nav>
     <ul>
       <li>
-        <router-link :to="{ name: 'incapacidades'}">
+        <router-link 
+          :to="{ name: 'incapacidades'}" 
+          @click.native="hideMenu"
+        >
           Incapacidades
         </router-link>
       </li>
       <li>
-        <router-link :to="{ name: 'accidentes'}">
+        <router-link 
+          :to="{ name: 'accidentes'}"
+          @click.native="hideMenu"
+        >
           Accidentes
         </router-link>
       </li>
       <li v-if="isAdmin">
-        <router-link :to="{ name: 'dashboard'}">
+        <router-link 
+          :to="{ name: 'dashboard'}"
+          @click.native="hideMenu"
+        >
           Dashboard
         </router-link>
       </li>
@@ -34,6 +43,11 @@ export default {
       isAdmin: 'canRegisterNoveltiesToAnyEmployee',
     }),
   },
+  methods: {
+    hideMenu(){
+      this.$emit('menu-selected')
+    },
+  }
 }
 </script>
 

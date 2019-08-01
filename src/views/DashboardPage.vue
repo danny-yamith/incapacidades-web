@@ -7,8 +7,8 @@
 
     <template v-slot:content>
       <DashboardTablesLayout 
-        :startDate="startDate" 
-        :endDate="endDate"
+        :start-date="startDate" 
+        :end-date="endDate"
       />
     </template>
   </QsModuleLayout>
