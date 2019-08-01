@@ -7,7 +7,10 @@
           class="side-nav col-8 col-sm-6 col-md-3 d-flex flex-column h-100 shadow"
         >
           <div class="title row">
-            <!-- <img src="../../assets/img/logo.png"> -->
+            <img 
+              class="p-3"
+              src="../../assets/img/logo.png"
+            >
           </div>
           <div class="menu row flex-grow-1">
             <QsMenu />
@@ -103,6 +106,11 @@ export default {
       .title {
         height: 100px;
         background: #343A40;
+
+        img {
+          max-width: 100%;
+          max-height: 100%;
+        }
       }
       .menu {
         background: #FFFFFF;

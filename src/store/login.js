@@ -39,17 +39,20 @@ const actions = {
       pass: password,
       poolName,
       type
-    }).then(res => {
+    })
+    .then(res => {
       commit('setSession', res.data)
-      return res.data
-    }).then(session => {
       axios.defaults.headers = {
-        Authorization: session.sessionId
+        Authorization: res.data.sessionId
       }
-      return dispatch('loadPerProfConf', session.sessionId)
-    }).catch(err => {
-      commit('setError', err)
+      return res.data
+    })
+    .catch(err => {
+      commit('setError', 'Error en las credenciales')
       throw err
+    })
+    .then(session => {
+      return dispatch('loadPerProfConf', session.sessionId)
     })
   },
   logOut({ dispatch }){
@@ -63,11 +66,10 @@ const actions = {
 
     return axios.get('/perProfCfg/getFromSession')
       .then(res => {
-        console.log('perProfCfg', res.data)
         commit('setPerProfCfg', res.data)
       }).catch(err => {
-        console.log(err)
-        commit('setError', err)
+        dispatch('logOut')
+        commit('setError', 'No tiene permisos')
         throw err
       })
   }

@@ -16,6 +16,11 @@
           Dashboard
         </router-link>
       </li>
+      <!-- <li v-if="isAdmin">
+        <router-link :to="{ name: 'dashboard-table'}">
+          Dashboard Charts
+        </router-link>
+      </li> -->
     </ul>
   </nav>
 </template>

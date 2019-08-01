@@ -6,9 +6,10 @@
   >
     <b-navbar-brand 
       href="#"
+      v-if="isPhone()"
       @click="toggleNavbar"
     >
-      {{ isPhone() }}
+      <img src="../../assets/img/menu.png">
     </b-navbar-brand>
     <b-navbar-toggle target="nav-collapse" />
 

@@ -17,11 +17,6 @@ const routes = [
         component: () => import('@/views/LoginPage'),
       },
       {
-        path: '/test',
-        name: 'test',
-        component: () => import('@/views/Test'),
-      },
-      {
         path: '',
         component: () => import('@/components/layouts/QsAppShell'),
         children: [
@@ -40,6 +35,11 @@ const routes = [
             name: 'dashboard',
             component: () => import('@/views/DashboardPage')
           },
+          // {
+          //   path: 'dashboard-table',
+          //   name: 'dashboard-table',
+          //   component: () => import('@/views/DashboardTablesPage')
+          // },
         ],
       },
     ],
@@ -48,7 +48,6 @@ const routes = [
 
 
 var router = new VueRouter({
-  mode: 'history',
   routes,
   scrollBehavior(to, from, savedPosition) {
     return { x: 0, y: 0 }

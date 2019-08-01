@@ -304,7 +304,6 @@ export default {
             ? this.employee.id
             : this.perEmployee.id
 
-
           this.showProgressBar()
           this.axios.post('/perAccident', {
             empId,

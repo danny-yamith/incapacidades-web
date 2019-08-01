@@ -53,12 +53,39 @@
         Aceptar
       </b-button>
     </div>
+
+    <b-modal 
+      id="modalError" 
+      v-model="showErrorModal" 
+      title="Error" 
+      ok-only
+      header-bg-variant="danger"
+      header-text-variant="light"
+    >
+      <p>
+        {{ error }}
+      </p>
+
+      <div 
+        slot="modal-footer" 
+        class="w-100"
+      >
+        <b-button
+          variant="danger"
+          size="sm"
+          class="float-right"
+          @click="showErrorModal=false"
+        >
+          Cerrar
+        </b-button>
+      </div>
+    </b-modal>
   </b-form>
 </template>
 
 <script>
 import QsInput from '@/components/atoms/QsInput'
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapState, mapGetters } from 'vuex';
 import md5 from 'blueimp-md5'
 
 export default {
@@ -69,9 +96,16 @@ export default {
     return {
       username: '',
       password: '',
+      showErrorModal: false,
     }
   },
   computed: {
+    ...mapState('login', {
+      error: 'error',
+    }),
+    ...mapGetters('login', {
+      isAdmin: 'canRegisterNoveltiesToAnyEmployee',
+    }),
     poolName() {
       return this.$route.params.poolName
     },
@@ -91,14 +125,16 @@ export default {
         username: this.username,
         password: this.md5pass, 
         poolName: this.poolName
-      }).then(res => {
-        console.log('loged In')
-        console.log(res)
-        this.hideProgressBar()
-        this.$router.push({ name: 'incapacidades' })
-      }).catch(err => {
-        this.hideProgressBar()
       })
+      .then(res => {
+        console.log(this.isAdmin)
+        this.$router.push({ name: this.isAdmin ? 'dashboard' : 'incapacidades' })
+      })
+      .catch(this.catch)
+      .finally(() => this.hideProgressBar())
+    },
+    catch(error){
+      this.showErrorModal = true
     },
   },
 }

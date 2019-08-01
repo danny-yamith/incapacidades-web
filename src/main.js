@@ -23,7 +23,7 @@ import router from '@/router'
 import store from '@/store'
 
 import App from './App.vue'
-import { baseUrl } from './constants'
+import { baseUrl } from '@/utils/constants'
 import '@/assets/base.css'
 
 
