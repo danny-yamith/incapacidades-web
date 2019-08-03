@@ -8,12 +8,16 @@ import loading from '@/store/loading'
 Vue.use(Vuex)
 
 const state = () => ({
+  title: '',
 })
 
 const getters = {
 }
 
 const mutations = {
+  setState(state, title){
+    state.title = title
+  },
 }
 
 const actions = {

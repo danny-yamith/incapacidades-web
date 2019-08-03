@@ -23,6 +23,11 @@ export default {
     QsModuleLayout,
     DashboardTablesLayout,
   },
+  data() {
+    return {
+      title: 'Dashboard'
+    }
+  },
   computed: {
     startDate() {
       return this.$moment()

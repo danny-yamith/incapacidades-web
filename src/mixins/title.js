@@ -1,3 +1,4 @@
+import { mapMutations, mapState } from "vuex";
 
 function getTitle(vm) {
     const {title} = vm.$options
@@ -14,5 +15,11 @@ export default {
     if(title) {
       document.title = title
     }
-  }
+  },
+  computed: {
+    ...mapState([ 'title' ])
+  },
+  methods: {
+    ...mapMutations([ 'setTitle' ])
+  },
 }
