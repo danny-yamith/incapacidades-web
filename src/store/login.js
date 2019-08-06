@@ -7,7 +7,7 @@ const state = () => ({
   perProfCfg: null,
   error: null,
   themeColor: {
-    nav_bar_bg: '#66B883',
+    nav_bar_bg: '#aaaaaa',
     nav_bar_text: '#111111'
   },
 })
@@ -35,11 +35,11 @@ const mutations = {
     Object.assign(statePrm, state())
   },
   setThemeColor(state, colors) {
-    
-    let newObj = colors.reduce((acc,cur) => ({...acc,[cur.element]:cur.value}),{});
-    console.log(newObj);
-    
-    state.themeColor = newObj;
+    if (colors && colors.length > 0) {
+      let newObj = colors.reduce((acc, cur) => ({ ...acc, [cur.element]: cur.value }), {});
+      state.themeColor = newObj;
+    }
+
   }
 }
 
@@ -69,8 +69,8 @@ const actions = {
             dispatch('loadPerProfConf', session.sessionId),
             dispatch('getSysColorCfg')
           ])
-          .then(([response1, response2]) => {
-          })
+            .then(([response1, response2]) => {
+            })
           // return dispatch('loadPerProfConf', session.sessionId)
         }).catch(
           e => console.log(e)

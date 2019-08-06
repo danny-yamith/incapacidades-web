@@ -12,8 +12,8 @@
           >
             <img 
               class="p-3"
-              :src="`${baseUrl}bfile/getEntLogoByPoolName?ownerId=1&poolName=${poolName}`"
-            >
+              :src="`${baseUrl}bfile/getEntLogoByPoolName?ownerId=1&poolName=${getPoolName}`"
+            />
           </div>
           <div class="menu row flex-grow-1">
             <QsMenu @menu-selected="hideMenu" />
@@ -45,46 +45,49 @@
 </template>
 
 <script>
-import QsNavbar from '@/components/atoms/QsNavbar'
-import QsProgressBar from '@/components/atoms/QsProgressBar'
-import QsMenu from '@/components/molecules/QsMenu'
-import { mapGetters } from 'vuex';
-import { baseUrl } from '@/utils/constants';
- 
+import QsNavbar from "@/components/atoms/QsNavbar";
+import QsProgressBar from "@/components/atoms/QsProgressBar";
+import QsMenu from "@/components/molecules/QsMenu";
+import { mapGetters, mapActions } from "vuex";
+import { baseUrl } from "@/utils/constants";
+
 export default {
   components: {
     QsNavbar,
     QsProgressBar,
-    QsMenu,
+    QsMenu
   },
-  data(){
+  data() {
     return {
       showMenu: false,
-      baseUrl,
-    }
+      baseUrl
+    };
   },
   computed: {
-    ...mapGetters('login', {
-      token: 'token',
-      themeColor: 'themeColor',      
+    ...mapGetters("login", {
+      token: "token",
+      themeColor: "themeColor"
     }),
     showDrawer() {
-      let show = this.isNotPhone() || this.showMenu
-      return show
-    },
-    poolName() {
-      return this.$route.params.poolName
-    },
+      let show = this.isNotPhone() || this.showMenu;
+      return show;
+    }
   },
   watch: {
-    '$mq'(newValue){
-      if(this.isNotPhone()) this.showMenu = false
+    $mq(newValue) {
+      if (this.isNotPhone()) this.showMenu = false;
     },
+
+    "$route.params.poolName"(newValue, oldValue) {
+      if (oldValue != newValue) {
+        this.logOut();
+      }
+    }
   },
   created() {
     this.axios.defaults.headers.common = {
-      "Authorization": this.token,
-    }
+      Authorization: this.token
+    };
   },
   mounted() {
     // this.$router.push({
@@ -92,14 +95,22 @@ export default {
     // })
   },
   methods: {
-    toggleMenu() {
-      this.showMenu = !this.showMenu
+    ...mapActions("login", {
+      logOutStore: "logOut"
+    }),
+    logOut() {
+      this.logOutStore().then(() => {
+        this.$router.push({ name: "login" });
+      });
     },
-    hideMenu(){
-      this.showMenu = false
+    toggleMenu() {
+      this.showMenu = !this.showMenu;
+    },
+    hideMenu() {
+      this.showMenu = false;
     }
-  },
-}
+  }
+};
 </script>
 
 <style lang="scss" scoped>
@@ -124,7 +135,7 @@ export default {
         }
       }
       .menu {
-        background: #FFFFFF;
+        background: #ffffff;
       }
     }
 
@@ -134,7 +145,7 @@ export default {
       top: 0;
       bottom: 0;
       right: 0;
-      background-color: rgba(0,0,0,.5);
+      background-color: rgba(0, 0, 0, 0.5);
     }
 
     .content {
@@ -163,8 +174,6 @@ export default {
   transform: translate(-25em, 0);
 }
 
-
-
 .opacity-enter-active,
 .opacity-leave-active,
 .opacity-enter-active,
@@ -184,5 +193,4 @@ export default {
 .opacity-enter {
   opacity: 0;
 }
-
 </style>
