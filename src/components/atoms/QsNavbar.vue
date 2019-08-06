@@ -1,8 +1,7 @@
 <template>
   <b-navbar 
-    class="navbar shadow-sm" 
-    type="dark" 
-    variant="dark"
+    ref="nav_bar"
+    class="navbar shadow-sm"     
   >
     <b-navbar-brand 
       v-if="isPhone()"
@@ -16,9 +15,12 @@
     <b-collapse 
       id="nav-collapse" 
       is-nav
-    >
+    >    
       <b-navbar-nav class="ml-auto">
-        <b-nav-item-dropdown right>
+        <b-nav-item-dropdown 
+          ref="nav_item"
+          right            
+        >
           <!-- Using 'button-content' slot -->
           <template slot="button-content">
             {{ userName }}
@@ -30,22 +32,42 @@
             Cerrar sesión
           </b-dropdown-item>
         </b-nav-item-dropdown>
-      </b-navbar-nav>
+      </b-navbar-nav>      
     </b-collapse>
   </b-navbar>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import { log } from 'util';
 
 export default {
+  data() {
+    return {
+      styleObject: {
+        background:'red',
+        color: 'blue',
+        fontSize: '13px'
+      }
+    }    
+  },
   computed: {
     ...mapGetters('login', {
       user: 'user',
+      themeColor: 'themeColor',
     }),
     userName() {
       return this.user ? this.user.firstName : ''
     },
+  },
+  mounted(){
+   var navBar = this.$refs.nav_bar;
+   navBar.style.background = this.themeColor.nav_bar_bg
+   
+   var navItems= this.$refs.nav_item.$children;   
+   navItems.forEach(element => {     
+      element.$el.style.color = this.themeColor.nav_bar_text 
+   });
   },
   methods: {
     ...mapActions('login', {

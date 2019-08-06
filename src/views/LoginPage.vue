@@ -7,7 +7,7 @@
       v-if="isNotPhone()"
       class="logo"
     >
-      <img src="../assets/img/logo.png">
+      <img :src="`${baseUrl}bfile/getEntLogoByPoolName?ownerId=1&poolName=${poolName}`">
     </div>
     <DualRadialSlicer 
       class="dual-radial-slicer"
@@ -53,6 +53,7 @@ import DualRadialSlicer from '@/components/layouts/DualRadialSlicerLayout'
 import LoginForm from '@/components/modules/LoginForm'
 import QsProgressBar from '@/components/atoms/QsProgressBar'
 import { setTimeout } from 'timers';
+import { baseUrl } from '@/utils/constants'
 
 export default {
   components: {
@@ -63,6 +64,7 @@ export default {
   data() {
     return {
       side: 'left',
+      baseUrl,
     }
   },
   computed: {
