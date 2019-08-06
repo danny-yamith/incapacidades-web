@@ -6,33 +6,45 @@ const state = () => ({
   session: null,
   perProfCfg: null,
   error: null,
+  themeColor: {
+    nav_bar_bg: '#66B883',
+    nav_bar_text: '#111111'
+  },
 })
 
 const getters = {
   token: state => state.session ? state.session.sessionId : null,
   user: state => state.session ? state.session.employee : null,
   canRegisterNoveltiesToAnyEmployee: state => state.perProfCfg
-    ? state.perProfCfg.regAnyAttenNov 
+    ? state.perProfCfg.regAnyAttenNov
     : false,
+  themeColor: state => state.themeColor,
 }
 
 const mutations = {
-  setSession(state, session){
+  setSession(state, session) {
     state.session = session
   },
-  setError(state, error){
+  setError(state, error) {
     state.error = error
   },
-  setPerProfCfg(state, perProfCfg){
+  setPerProfCfg(state, perProfCfg) {
     state.perProfCfg = perProfCfg
   },
   clearState(statePrm) {
     Object.assign(statePrm, state())
   },
+  setThemeColor(state, colors) {
+    
+    let newObj = colors.reduce((acc,cur) => ({...acc,[cur.element]:cur.value}),{});
+    console.log(newObj);
+    
+    state.themeColor = newObj;
+  }
 }
 
 const actions = {
-  logIn({ commit, dispatch }, { username, password, poolName, type = 'web' }){
+  logIn({ commit, dispatch }, { username, password, poolName, type = 'web' }) {
 
     return axios.post('/employee/login', {
       login: username,
@@ -40,28 +52,50 @@ const actions = {
       poolName,
       type
     })
-    .then(res => {
-      commit('setSession', res.data)
-      axios.defaults.headers = {
-        Authorization: res.data.sessionId
-      }
-      return res.data
-    })
-    .catch(err => {
-      commit('setError', 'Error en las credenciales')
-      throw err
-    })
-    .then(session => {
-      return dispatch('loadPerProfConf', session.sessionId)
-    })
+      .then(res => {
+        commit('setSession', res.data)
+        axios.defaults.headers = {
+          Authorization: res.data.sessionId
+        }
+        return res.data
+      })
+      .catch(err => {
+        commit('setError', 'Error en las credenciales')
+        throw err
+      })
+      .then(
+        session => {
+          return Promise.all([
+            dispatch('loadPerProfConf', session.sessionId),
+            dispatch('getSysColorCfg')
+          ])
+          .then(([response1, response2]) => {
+          })
+          // return dispatch('loadPerProfConf', session.sessionId)
+        }).catch(
+          e => console.log(e)
+        )
   },
-  logOut({ dispatch }){
+
+  getSysColorCfg({ commit, dispatch }) {
+    return axios.get('/sysColorCfg/getAll')
+      .then(res => {
+        commit('setThemeColor', res.data)
+      })
+      .catch(err => {
+        dispatch('logOut')
+        commit('setError', 'No se encontro configuración del tema')
+        throw err
+      })
+  },
+
+  logOut({ dispatch }) {
     dispatch('clearAllState', null, { root: true })
-    return new Promise(function(resolve, reject){
+    return new Promise(function (resolve, reject) {
       resolve()
     })
   },
-  loadPerProfConf({commit, dispatch}, token){
+  loadPerProfConf({ commit, dispatch }, token) {
     commit('startLoading')
 
     return axios.get('/perProfCfg/getFromSession')

@@ -6,10 +6,13 @@
           v-if="showDrawer"
           class="side-nav col-8 col-sm-6 col-md-3 d-flex flex-column h-100 shadow"
         >
-          <div class="title row">
+          <div 
+            class="title row"
+            :style="{ background: themeColor.nav_bar_bg}"
+          >
             <img 
               class="p-3"
-              src="../../assets/img/logo.png"
+              :src="`${baseUrl}bfile/getEntLogoByPoolName?ownerId=1&poolName=${poolName}`"
             >
           </div>
           <div class="menu row flex-grow-1">
@@ -46,6 +49,7 @@ import QsNavbar from '@/components/atoms/QsNavbar'
 import QsProgressBar from '@/components/atoms/QsProgressBar'
 import QsMenu from '@/components/molecules/QsMenu'
 import { mapGetters } from 'vuex';
+import { baseUrl } from '@/utils/constants';
  
 export default {
   components: {
@@ -56,15 +60,20 @@ export default {
   data(){
     return {
       showMenu: false,
+      baseUrl,
     }
   },
   computed: {
     ...mapGetters('login', {
-      token: 'token'
+      token: 'token',
+      themeColor: 'themeColor',      
     }),
     showDrawer() {
       let show = this.isNotPhone() || this.showMenu
       return show
+    },
+    poolName() {
+      return this.$route.params.poolName
     },
   },
   watch: {
@@ -108,7 +117,6 @@ export default {
 
       .title {
         height: 100px;
-        background: #343A40;
 
         img {
           max-width: 100%;
