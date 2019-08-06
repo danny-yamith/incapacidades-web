@@ -25,11 +25,19 @@
           Dashboard
         </router-link>
       </li>
-      <!-- <li v-if="isAdmin">
-        <router-link :to="{ name: 'dashboard-table'}">
-          Dashboard Charts
+      <li v-if="isAdmin">
+        <router-link 
+          :to="{ name: 'mis-accidentes'}"
+          @click.native="hideMenu"
+        >
+          Mis Accidentes
         </router-link>
-      </li> -->
+      </li>
+      <li v-if="isAdmin">
+        <router-link :to="{ name: 'test'}">
+          Test Table
+        </router-link>
+      </li>
     </ul>
   </nav>
 </template>
