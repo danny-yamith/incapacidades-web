@@ -35,6 +35,16 @@ const routes = [
             name: 'dashboard',
             component: () => import('@/views/DashboardPage')
           },
+          {
+            path: 'mis-accidentes',
+            name: 'mis-accidentes',
+            component: () => import('@/views/MyAccidentsPage')
+          },
+          {
+            path: 'test',
+            name: 'test',
+            component: () => import('@/views/TestDataTableWithControls')
+          }
           // {
           //   path: 'dashboard-table',
           //   name: 'dashboard-table',

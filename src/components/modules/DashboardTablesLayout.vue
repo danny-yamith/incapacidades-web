@@ -10,7 +10,13 @@
         head-variant="dark"
         :items="perEntityRows" 
         :fields="perEntityLabels"
-      />
+        :busy="isLoading"
+      >
+        <div slot="table-busy" class="text-center text-danger my-2">
+          <b-spinner class="align-middle"></b-spinner>
+          <strong>Cargando...</strong>
+        </div>
+      </b-table>
     </div>
 
     <div class="col col-xl-6">
@@ -24,7 +30,13 @@
           head-variant="dark"
           :items="perAccidentRows" 
           :fields="perAccidentLabels"
-        />
+          :busy="isLoading"
+        >
+          <div slot="table-busy" class="text-center text-danger my-2">
+            <b-spinner class="align-middle"></b-spinner>
+            <strong>Cargando...</strong>
+          </div>
+        </b-table>
       </div>
 
       <div class="row">
@@ -36,7 +48,13 @@
           head-variant="dark"
           :items="perSickLeaveRows" 
           :fields="perSickLeaveLabels"
-        />
+          :busy="isLoading"
+        >
+          <div slot="table-busy" class="text-center text-danger my-2">
+            <b-spinner class="align-middle"></b-spinner>
+            <strong>Cargando...</strong>
+          </div>
+        </b-table>
       </div>
 
       <b-modal 
