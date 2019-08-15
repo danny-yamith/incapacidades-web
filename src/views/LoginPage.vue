@@ -7,7 +7,7 @@
       v-if="isNotPhone()"
       class="logo"
     >
-      <img :src="`${baseUrl}bfile/getEntLogoByPoolName?ownerId=1&poolName=${poolName}`">
+      <img :src="`${baseUrl}bfile/getEntLogoByPoolName?ownerId=1&poolName=${getPoolName}`">
     </div>
     <DualRadialSlicer 
       class="dual-radial-slicer"

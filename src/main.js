@@ -20,6 +20,7 @@ import VueCurrencyFilter from 'vue-currency-filter'
 import titleMixin from '@/mixins/title'
 import responsiveQueryMixin from '@/mixins/responsiveQuery'
 import loadingMixin from '@/mixins/loading'
+import getPoolName from '@/mixins/poolName'
 
 import router from '@/router'
 import store from '@/store'
@@ -85,6 +86,7 @@ Vue.use(VueCurrencyFilter, {
 Vue.mixin(titleMixin)
 Vue.mixin(responsiveQueryMixin)
 Vue.mixin(loadingMixin)
+Vue.mixin(getPoolName)
 Vue.config.productionTip = false
 
 new Vue({

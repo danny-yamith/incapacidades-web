@@ -106,9 +106,6 @@ export default {
     ...mapGetters('login', {
       isAdmin: 'canRegisterNoveltiesToAnyEmployee',
     }),
-    poolName() {
-      return this.$route.params.poolName
-    },
     md5pass() {
       return md5(this.password)
         .toUpperCase()
@@ -124,7 +121,7 @@ export default {
       this.logIn({ 
         username: this.username,
         password: this.md5pass, 
-        poolName: this.poolName
+        poolName: this.getPoolName
       })
       .then(res => {
         console.log(this.isAdmin)
