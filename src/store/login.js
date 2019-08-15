@@ -47,11 +47,11 @@ const actions = {
   logIn({ commit, dispatch }, { username, password, poolName, type = 'web' }) {
 
     return axios.post('/employee/login', {
-      login: username,
-      pass: password,
-      poolName,
-      type
-    })
+        login: username,
+        pass: password,
+        poolName,
+        type
+      })
       .then(res => {
         commit('setSession', res.data)
         axios.defaults.headers = {
@@ -63,20 +63,13 @@ const actions = {
         commit('setError', 'Error en las credenciales')
         throw err
       })
-      .then(
-        session => {
+      .then(session => {
           return Promise.all([
             dispatch('loadPerProfConf', session.sessionId),
             dispatch('getSysColorCfg')
           ])
-            .then(([response1, response2]) => {
-            })
-          // return dispatch('loadPerProfConf', session.sessionId)
-        }).catch(
-          e => console.log(e)
-        )
+      })  
   },
-
   getSysColorCfg({ commit, dispatch }) {
     return axios.get('/sysColorCfg/getAll')
       .then(res => {
@@ -88,7 +81,6 @@ const actions = {
         throw err
       })
   },
-
   logOut({ dispatch }) {
     dispatch('clearAllState', null, { root: true })
     return new Promise(function (resolve, reject) {
