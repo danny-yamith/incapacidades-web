@@ -21,6 +21,7 @@
     "vue": "^2.6.10",
     "vue-axios": "^2.1.4",
     "vue-chartjs": "^3.4.2",
+    "vue-currency-filter": "^3.4.2",
     "vue-moment-lib": "^1.2.2",
     "vue-mq": "^1.0.1",
     "vue-router": "^3.0.7",

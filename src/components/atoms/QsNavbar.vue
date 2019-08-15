@@ -1,7 +1,7 @@
 <template>
   <b-navbar 
     ref="nav_bar"
-    class="navbar shadow-sm"     
+    class="navbar shadow"     
   >
     <b-navbar-brand 
       v-if="isPhone()"

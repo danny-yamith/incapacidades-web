@@ -15,6 +15,8 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import "@/assets/fontawesome/css/all.min.css";
 
+import VueCurrencyFilter from 'vue-currency-filter'
+
 import titleMixin from '@/mixins/title'
 import responsiveQueryMixin from '@/mixins/responsiveQuery'
 import loadingMixin from '@/mixins/loading'
@@ -70,6 +72,15 @@ Vue.use(VeeValidate, {
 moment.locale('es')
 moment.defaultFormat = `YYYY-MM-DDTHH:mm:ss.SSSZ`
 Vue.use(VueMomentLib)
+
+Vue.use(VueCurrencyFilter, {
+  symbol : '$',
+  thousandsSeparator: '.',
+  fractionCount: 2,
+  fractionSeparator: ',',
+  symbolPosition: 'front',
+  symbolSpacing: false
+})
 
 Vue.mixin(titleMixin)
 Vue.mixin(responsiveQueryMixin)

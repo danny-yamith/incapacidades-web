@@ -35,8 +35,12 @@
         <QsProgressBar
           v-if="isLoading"
           :indeterminate="isLoadingIndeterminate"
+          class="progress"
         />
-        <div class="main d-flex flex-grow-1">
+        <div 
+          ref="main" 
+          class="main d-flex flex-grow-1"
+        >
           <router-view />
         </div>
       </div>
@@ -79,6 +83,9 @@ export default {
   watch: {
     '$mq'(newValue){
       if(this.isNotPhone()) this.showMenu = false
+    },
+    $route() {
+      this.$refs.main.scrollTop = 0
     },
   },
   created() {
@@ -139,6 +146,7 @@ export default {
 
     .content {
       height: 100vh;
+
       .main {
         height: 100vh;
         overflow-y: auto;
@@ -184,5 +192,6 @@ export default {
 .opacity-enter {
   opacity: 0;
 }
+
 
 </style>

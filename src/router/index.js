@@ -41,10 +41,10 @@ const routes = [
             component: () => import('@/views/MyAccidentsPage')
           },
           {
-            path: 'test',
-            name: 'test',
-            component: () => import('@/views/TestDataTableWithControls')
-          }
+            path: 'mis-incapacidades',
+            name: 'mis-incapacidades',
+            component: () => import('@/views/MyIncapacitiesPage')
+          },
           // {
           //   path: 'dashboard-table',
           //   name: 'dashboard-table',
@@ -59,9 +59,6 @@ const routes = [
 
 var router = new VueRouter({
   routes,
-  scrollBehavior(to, from, savedPosition) {
-    return { x: 0, y: 0 }
-  },
 })
 
 router.beforeEach((to, from, next) => {

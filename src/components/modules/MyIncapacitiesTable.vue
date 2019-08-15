@@ -5,14 +5,14 @@
       striped 
       class="table-light p-1"
       :responsive="true"
-      :items="accidents"
+      :items="incapacities"
       :fields="fields"
       :busy="isLoading"
     >
       <template v-slot:actions="row">
-        <b-button 
+        <b-button
           variant="outline-primary"
-          size="sm" 
+          size="sm"
           class="mr-1"
           @click="launchUploadDocument(row.item.id)"
         >
@@ -21,13 +21,14 @@
       </template>
 
       <div 
-        slot="table-busy" 
+        slot="table-busy"
         class="text-center text-info my-2"
       >
         <b-spinner class="align-middle" />
         <strong class="ml-2">Cargando...</strong>
       </div>
     </b-table>
+
     <input
       id="file"
       ref="file"
@@ -92,19 +93,21 @@
 
 <script>
 import { mapGetters } from 'vuex'
+
 export default {
-  data() {
+  data(){
     return {
       fields: [
-        { key: 'date', label: 'Fecha',   },
-        { key: 'cause', label: 'Causal',  },
-        { key: 'days', label: 'Días de incapacidad', class: 'text-right'  },
-        { key: 'actions', label: 'Acciones',  },
+        { key: 'date', label: 'Fecha', },
+        { key: 'cause', label: 'Causal', },
+        { key: 'days', label: 'Días de incapacidad', class: 'text-right'},
+        { key: 'actions', label: 'Acciones', },
       ],
-      accidents: [],
+      incapacities: [],
       perEmployee: null,
-      accidentId: 0,
-      error: 'Error al subir el arhivo, intenta nuevamente',
+      incapacityId: 0,
+      file: null,
+      error: '',
       showErrorModal: false,
       showOkModal: false,
     }
@@ -114,12 +117,12 @@ export default {
       user: 'user',
     }),
   },
-  created() {
+  created(){
     this.showProgressBar()
     this.getPerEmployee()
       .then(res => {
         this.perEmployee = res.data
-        return this.getEmployeeAccidents(this.perEmployee.id)
+        return this.getEmployeeIncapacities(this.perEmployee.id)
       })
       .catch(e => {
         console.log('error', e)
@@ -129,54 +132,55 @@ export default {
       .finally(() => this.hideProgressBar())
   },
   methods: {
-    getEmployeeAccidents(perEmployeeId){
-      return this.axios.get(`/perAccident/perEmployee/${perEmployeeId}`)
+    getEmployeeIncapacities(perEmployeeId){
+      return this.axios.get(`/perSickLeave/perEmployee/${perEmployeeId}`)
         .then(res => {
-          this.accidents = res.data.map(item => ({
+          this.incapacities = res.data.map(item => ({
             id: item[0],
             date: this.$moment(
-                item[1],
-                this.$moment.defaultFormat)
-              .format('MMMM D YYYY'),
+              item[1],
+              this.$moment.defaultFormat
+            ).format('MMMM D YYYY'),
             cause: item[2],
             days: item[3],
           }))
-          return this.accidents
+
+          return this.incapacities
         })
     },
     getPerEmployee(){
-      return this.axios.get('/perEmployee',{
+      return this.axios.get('/perEmployee', {
         params: {
-          document: this.user.document
+          document: this.user.document,
         }
       })
     },
-    launchUploadDocument(accidentId){
-      this.accidentId = accidentId
+    launchUploadDocument(incapacityId){
+      this.incapacityId = incapacityId
       this.$refs.file.click()
     },
     handleFileToUpload(){
-      const file = this.$refs.file.files[0]
-      if(file && this.accidentId){
-        const formData = new FormData()
+      let file = this.$refs.file.files[0]
+      if(file && this.incapacityId){
+        let formData = new FormData()
         formData.append('files', file)
-        formData.append('ownerId', this.accidentId)
-        formData.append('ownerType', 3) // 3 - ACCIDENT en FrmAttachments
+        formData.append('ownerId', this.incapacityId)
+        formData.append('ownerType', 6) // 6 - SICKLEAVES en FrmAttachments
 
         this.showProgressBar()
         this.axios.post(`/bfile/upload/`, formData, {
           headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-          , onUploadProgress: progressEvent => {
+            'Content-Type': 'multipart/form-data',
+          },
+          onUploadProgress: progressEvent => {
             this.setProgressPercentage(Number.parseInt(
-              Math.round(progressEvent.loaded * 100) / progressEvent.total)
-            )
+              Math.round(progressEvent.loaded * 100) / progressEvent.total
+            ))
           }
         })
         .then(res => this.showOkModal = true)
-        .catch(e => {
-          this.error = 'Error al subir el archivo, intente otra vez'
+        .catch(err => {
+          this.error = 'Error al subirel archivo, intente otra vez'
           this.showErrorModal = true
         })
         .finally(() => this.hideProgressBar())

@@ -1,88 +1,88 @@
 <template>
   <div class="row p-3">
+    <div class="col-12">
+      <ul class="nav nav-tabs">
+        <li 
+          class="nav-item" 
+          @click="showTab('entity')"
+        >
+          <p 
+            class="nav-link"
+            :class="[{ active: activeTab == 'entity'}]"
+          >
+            EPS/ARL
+          </p>
+        </li>
+        <li 
+          class="nav-item" 
+          @click="showTab('accident')"
+        >
+          <p 
+            class="nav-link"
+            :class="[{ active: activeTab == 'accident'}]"
+          >
+            Tipo Incapacidad
+          </p>
+        </li>
+        <li 
+          class="nav-item" 
+          @click="showTab('office')"
+        >
+          <p 
+            class="nav-link"
+            :class="[{ active: activeTab == 'office'}]"
+          >
+            Sucursal
+          </p>
+        </li>
+      </ul>
+    </div>
 
-    <div class="col col-xl-6">
-      <p>Estadisticas por EPS</p>
+    <div class="col-12">
       <b-table 
         hover 
         striped 
-        :small="true"
-        head-variant="dark"
-        :items="perEntityRows" 
-        :fields="perEntityLabels"
+        class="table-light p-1"
+        :responsive="true"
+        :items="table.items" 
+        :fields="table.fields"
         :busy="isLoading"
       >
-        <div slot="table-busy" class="text-center text-danger my-2">
-          <b-spinner class="align-middle"></b-spinner>
-          <strong>Cargando...</strong>
+        <div 
+          slot="table-busy" 
+          class="text-center text-info my-2"
+        >
+          <b-spinner class="align-middle" />
+          <strong class="ml-2">Cargando...</strong>
         </div>
       </b-table>
     </div>
 
-    <div class="col col-xl-6">
-      <div class="row">
+    <b-modal 
+      id="modalError" 
+      v-model="showErrorModal" 
+      title="Error" 
+      header-bg-variant="danger"
+      header-text-variant="light"
+    >
+      <p>
+        {{ error }}
+      </p>
 
-      <p>Estadisticas por tipo de incapacidad</p>
-        <b-table 
-          hover 
-          striped 
-          :small="true"
-          head-variant="dark"
-          :items="perAccidentRows" 
-          :fields="perAccidentLabels"
-          :busy="isLoading"
-        >
-          <div slot="table-busy" class="text-center text-danger my-2">
-            <b-spinner class="align-middle"></b-spinner>
-            <strong>Cargando...</strong>
-          </div>
-        </b-table>
-      </div>
-
-      <div class="row">
-        <p>Estadisticas por tipo de enfermedad</p>
-        <b-table 
-          hover 
-          striped 
-          :small="true"
-          head-variant="dark"
-          :items="perSickLeaveRows" 
-          :fields="perSickLeaveLabels"
-          :busy="isLoading"
-        >
-          <div slot="table-busy" class="text-center text-danger my-2">
-            <b-spinner class="align-middle"></b-spinner>
-            <strong>Cargando...</strong>
-          </div>
-        </b-table>
-      </div>
-
-      <b-modal 
-        id="modalError" 
-        v-model="showErrorModal" 
-        title="Error" 
-        header-bg-variant="danger"
-        header-text-variant="light"
+      <div 
+        slot="modal-footer" 
+        class="w-100"
       >
-        <p>
-          Error al cargar los datos
-        </p>
-
-        <div 
-          slot="modal-footer" 
-          class="w-100"
+        <b-button
+          variant="danger"
+          size="sm"
+          class="float-right"
+          @click="showErrorModal = false"
         >
-          <b-button
-            variant="danger"
-            size="sm"
-            class="float-right"
-            @click="showErrorModal = false"
-          >
-            Cerrar
-          </b-button>
-        </div>
-      </b-modal>
-    </div>
+          Cerrar
+        </b-button>
+      </div>
+    </b-modal>
   </div>
 </template>
 
@@ -102,8 +102,10 @@ export default {
     return {
       perEntityRows: null,
       perAccidentRows: null,
-      perSickLeaveRows: null,
+      perOfficeRows: null,
       showErrorModal: false,
+      activeTab: 'entity',
+      error: '',
     }
   },
   computed: { 
@@ -112,25 +114,51 @@ export default {
         {
           key: 'vlrRad',
           label: 'VALOR RADICADO',
+          class: 'text-right'
         },
         {
           key: 'vlrAprob',
           label: 'VALOR APROBADO',
+          class: 'text-right'
         },
         {
           key: 'vlrPend',
           label: 'VALOR PENDIENTE',
+          class: 'text-right'
         },
       ]
+    },
+    table() {
+      const entityArgs = {
+        items: this.perEntityRows,
+        fields: this.perEntityLabels,
+      }
+
+      const officeArgs = {
+        items: this.perOfficeRows,
+        fields: this.perOfficeLabels,
+      }
+
+      const accidentArgs = {
+        items: this.perAccidentRows,
+        fields: this.perAccidentLabels,
+      }
+
+      const selector = {
+        'entity': entityArgs,
+        'office': officeArgs,
+        'accident': accidentArgs,
+      }
+
+      return selector[this.activeTab]
     },
     perEntityLabels(){
       return [
         {
           key: 'rowTitle',
           label: 'EPS/ARL',
-          variant: 'dark',
         },
-        ...this.labels
+        ...this.labels,
       ]
     },
     perAccidentLabels(){
@@ -138,19 +166,17 @@ export default {
         {
           key: 'rowTitle',
           label: 'Tipo Incapacidad',
-          variant: 'dark',
         },
-        ...this.labels
+        ...this.labels,
       ]
     },
-    perSickLeaveLabels(){
+    perOfficeLabels(){
       return [
         {
           key: 'rowTitle',
-          label: 'Tipo Enfermedad',
-          variant: 'dark',
+          label: 'Sucursal',
         },
-        ...this.labels
+        ...this.labels,
       ]
     },
   },
@@ -158,7 +184,7 @@ export default {
     const promises = [
       this.getPerEntityRows(),
       this.getPerAccidentRows(),
-      this.getPerSickLeaveRows(),
+      this.getPerOfficeRows(),
     ]
 
     this.showProgressBar()
@@ -166,11 +192,11 @@ export default {
       .then(([
         perEntityRowsResult,
         perAccidentRowsResult, 
-        perSickLeaveRowsResult ]) => {
-          this.perEntityRows = perEntityRowsResult.data
-          this.perAccidentRows = perAccidentRowsResult.data
-          this.perSickLeaveRows = perSickLeaveRowsResult.data
-      })
+        perOfficeRowsResult ]) => {
+          this.perEntityRows =this.addCurrencyFilter( perEntityRowsResult.data)
+          this.perAccidentRows = this.addCurrencyFilter( perAccidentRowsResult.data)
+          this.perOfficeRows = this.addCurrencyFilter(perOfficeRowsResult.data)
+       })
       .catch(this.catch)
       .finally(() => this.hideProgressBar())
   },
@@ -178,19 +204,40 @@ export default {
     getPerEntityRows(){
       return this.axios.get('/tables/perEntity')
     },
+    addCurrencyFilter(items){
+      return items.map(item => ({
+            rowTitle: item.rowTitle,
+            vlrRad: this.$options.filters.currency(item.vlrRad),
+            vlrAprob: this.$options.filters.currency(item.vlrAprob),
+            vlrPend: this.$options.filters.currency(item.vlrPend),
+          }))
+
+    },
     getPerAccidentRows(){
       return this.axios.get('/tables/perAccident')
     },
-    getPerSickLeaveRows(){
-      return this.axios.get('/tables/perSickLeave')
+    getPerOfficeRows(){
+      return this.axios.get('/tables/perOffice')
     },
     catch(error){
+      this.error = 'Error al cargar los datos'
       this.showErrorModal = true
     },
+    showTab(tab){
+      this.activeTab = tab
+    }
   },
 }
 </script>
 
 <style lang="scss" scoped>
+.nav-link {
+  color: #007bff;
+  text-decoration: none;
+  background-color: transparent;
+}
 
+.dashboard-table {
+  background: white;
+}
 </style>

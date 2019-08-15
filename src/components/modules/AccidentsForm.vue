@@ -160,7 +160,7 @@
           class="float-right"
           @click="form.showOkModal = false"
         >
-          Aceptar
+          Cerrar
         </b-button>
       </div>
     </b-modal>
