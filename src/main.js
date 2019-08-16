@@ -65,6 +65,8 @@ Vue.use(VueMq, {
 
 Vue.use(VeeValidate, {
   locale: 'es',
+  fieldsBagName: 'vvFields',
+  errorBagName: 'vvErrors',
   dictionary: {
     es
   },

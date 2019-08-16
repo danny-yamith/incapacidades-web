@@ -19,7 +19,7 @@
         @click.native="hideMenu"
       >
         <div class="fas fa-wheelchair text-primary"></div>
-        <span>Incapacidades</span>
+        <span>Registrar Incapacidad</span>
       </router-link>
       <router-link 
         tag="li"
@@ -27,10 +27,10 @@
         @click.native="hideMenu"
       >
         <div class="fas fa-car-crash text-primary"></div>
-        <span>Accidentes</span>
+        <span>Registrar Accidente</span>
       </router-link>
       <router-link 
-        v-if="isAdmin"
+        v-if="hasContract"
         tag="li"
         :to="{ name: 'mis-incapacidades'}"
         @click.native="hideMenu"
@@ -39,7 +39,7 @@
         <span>Mis Incapacidades</span>
       </router-link>
       <router-link 
-        v-if="isAdmin"
+        v-if="hasContract"
         tag="li"
         :to="{ name: 'mis-accidentes'}"
         @click.native="hideMenu"
@@ -57,7 +57,8 @@ import { mapGetters } from 'vuex'
 export default {
   computed: {
     ...mapGetters('login', {
-      isAdmin: 'canRegisterNoveltiesToAnyEmployee',
+      isAdmin: 'isAdmin',
+      hasContract: 'hasContract',
     }),
   },
   methods: {

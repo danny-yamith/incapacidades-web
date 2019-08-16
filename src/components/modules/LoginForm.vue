@@ -11,8 +11,8 @@
       label="Usuario"
       data-vv-as="Usuario"
       placeholder="Ingrese su usuario"
-      :field="fields['username']"
-      :error="errors.first('username')"
+      :field="vvFields['username']"
+      :error="vvErrors.first('username')"
       class="input"
     />
 
@@ -24,8 +24,8 @@
       type="password"
       data-vv-as="Contraseña"
       placeholder="Digite su contraseña"
-      :field="fields['password']"
-      :error="errors.first('password')"
+      :field="vvFields['password']"
+      :error="vvErrors.first('password')"
       class="input"
     />
 
@@ -104,7 +104,7 @@ export default {
       error: 'error',
     }),
     ...mapGetters('login', {
-      isAdmin: 'canRegisterNoveltiesToAnyEmployee',
+      isAdmin: 'isAdmin',
     }),
     md5pass() {
       return md5(this.password)
@@ -124,7 +124,7 @@ export default {
         poolName: this.getPoolName
       })
       .then(res => {
-        console.log(this.isAdmin)
+        console.error(this.isAdmin)
         this.$router.push({ name: this.isAdmin ? 'dashboard' : 'incapacidades' })
       })
       .catch(this.catch)

@@ -125,7 +125,7 @@ export default {
         return this.getEmployeeIncapacities(this.perEmployee.id)
       })
       .catch(e => {
-        console.log('error', e)
+        console.error(e)
         this.error = 'Error al cargar los datos'
         this.showErrorModal = true
       })

@@ -17,7 +17,7 @@ export default {
     }
   },
   computed: {
-    ...mapState([ 'title' ])
+    ...mapState([ 'pageTitle' ])
   },
   methods: {
     ...mapMutations([ 'setTitle' ])

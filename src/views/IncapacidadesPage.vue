@@ -22,7 +22,7 @@ export default {
   },
   computed: {
     ...mapGetters('login', {
-      isAdmin: 'canRegisterNoveltiesToAnyEmployee',
+      isAdmin: 'isAdmin',
     }),
   }
 }

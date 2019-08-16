@@ -8,14 +8,14 @@ import loading from '@/store/loading'
 Vue.use(Vuex)
 
 const state = () => ({
-  title: '',
+  pageTitle: '',
 })
 
 const getters = {
 }
 
 const mutations = {
-  setState(state, title){
+  setTitle(state, title){
     state.title = title
   },
 }

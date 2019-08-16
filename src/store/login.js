@@ -4,7 +4,9 @@ const TAG = `login.js`;
 
 const state = () => ({
   session: null,
-  perProfCfg: null,
+  isAdmin: false,
+  perEmployee: null,
+  perContract: null,
   error: null,
   themeColor: {
     nav_bar_bg: '#aaaaaa',
@@ -15,9 +17,10 @@ const state = () => ({
 const getters = {
   token: state => state.session ? state.session.sessionId : null,
   user: state => state.session ? state.session.employee : null,
-  canRegisterNoveltiesToAnyEmployee: state => state.perProfCfg
-    ? state.perProfCfg.regAnyAttenNov
-    : false,
+  isAdmin: state => state.isAdmin,
+  perEmployee: state => state.perEmployee,
+  perContract: state => state.perContract,
+  hasContract: state => Boolean(state.perContract),
   themeColor: state => state.themeColor,
 }
 
@@ -28,8 +31,14 @@ const mutations = {
   setError(state, error) {
     state.error = error
   },
-  setPerProfCfg(state, perProfCfg) {
-    state.perProfCfg = perProfCfg
+  setIsAdmin(state, isAdmin){
+    state.isAdmin = isAdmin
+  },
+  setPerEmployee(state, perEmployee){
+    state.perEmployee = perEmployee
+  },
+  setPerContract(state, perContract){
+    state.perContract = perContract
   },
   clearState(statePrm) {
     Object.assign(statePrm, state())
@@ -64,10 +73,10 @@ const actions = {
         throw err
       })
       .then(session => {
-          return Promise.all([
-            dispatch('loadPerProfConf', session.sessionId),
-            dispatch('getSysColorCfg')
-          ])
+        return Promise.all([
+          dispatch('getPerProfCfgs', session.sessionId),
+          dispatch('getSysColorCfg'),
+        ])
       })  
   },
   getSysColorCfg({ commit, dispatch }) {
@@ -81,24 +90,66 @@ const actions = {
         throw err
       })
   },
+  getPerEmployee({ commit, dispatch }, perEmployeeDocument){
+    return axios.get('/perEmployee', {
+      params: {
+        document: perEmployeeDocument,
+      },
+    })
+    .then(res => {
+      commit('setPerEmployee', res.data)
+      return res.data
+    })
+    .catch(err => {
+      dispatch('logOut')
+      commit('setError', 'El usuario no tiene contratos vigentes')
+      throw err
+    })
+    .then(data => {
+      return dispatch('getPerContract', data.id)
+    })
+  },
   logOut({ dispatch }) {
     dispatch('clearAllState', null, { root: true })
     return new Promise(function (resolve, reject) {
       resolve()
     })
   },
-  loadPerProfConf({ commit, dispatch }, token) {
-    commit('startLoading')
-
+  getPerProfCfgs({ commit, dispatch, getters }, token) {
     return axios.get('/perProfCfg/getFromSession')
       .then(res => {
-        commit('setPerProfCfg', res.data)
+        const isAdmin = res.data
+          .map(perProfCfg => perProfCfg.regAnyAttenNov)
+          .reduce((prev, act) => prev || act)
+
+        commit('setIsAdmin', isAdmin)
+        return res.data
       }).catch(err => {
         dispatch('logOut')
         commit('setError', 'No tiene permisos')
         throw err
       })
-  }
+      .then(isAdmin => {
+        return dispatch('getPerEmployee', getters.user.document)
+      })
+  },
+  getPerContract({ commit, dispatch, state, getters }){
+    return axios.get('/perContract', {
+      params: {
+        empId: getters.perEmployee.id
+      }
+    })
+    .then(res => {
+      commit('setPerContract', res.data)
+    })
+    .catch(err => {
+      if(!getters.hasContract && !getters.isAdmin){
+        dispatch('logOut')
+        commit('setError', 'El usuario no tiene contratos vigentes')
+        throw err
+      }
+    })
+  },
 }
 
 export default {

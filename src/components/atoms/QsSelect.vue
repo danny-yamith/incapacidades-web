@@ -93,7 +93,6 @@ export default {
       }
     },
     required() {
-      console.log(this.validate)
       return this.validate && this.validate.required 
         ? this.validate.required 
         : false

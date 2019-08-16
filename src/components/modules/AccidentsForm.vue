@@ -18,8 +18,8 @@
           type="text"
           class="col-12 col-md-6"
           data-vv-as="Documento del empleado"
-          :field="fields['employeeDocument']"
-          :error="errors.first('employeeDocument')"
+          :field="vvFields['employeeDocument']"
+          :error="vvErrors.first('employeeDocument')"
         />
 
         <QsInput
@@ -31,8 +31,8 @@
           type="text"
           class="col-12 col-md-6"
           data-vv-as="Empleado"
-          :field="fields['employeeName']"
-          :error="errors.first('employeeName')"
+          :field="vvFields['employeeName']"
+          :error="vvErrors.first('employeeName')"
           :disabled="true"
         />
       </div>
@@ -48,8 +48,8 @@
           :options="causeOptions"
           class="col-12 col-md-6"
           :disabled="areSelectsDisabled"
-          :field="fields['cause']"
-          :error="errors.first('cause')"
+          :field="vvFields['cause']"
+          :error="vvErrors.first('cause')"
         />
       </div>
 
@@ -64,8 +64,8 @@
           :options="entityOptions"
           class="col-12 col-md-6"
           :disabled="areSelectsDisabled"
-          :field="fields['company']"
-          :error="errors.first('company')"
+          :field="vvFields['company']"
+          :error="vvErrors.first('company')"
         />
 
         <QsInput
@@ -76,8 +76,8 @@
           type="number"
           data-vv-as="Días de incapacidad"
           placeholder="Ingrese el número de dias"
-          :field="fields['days']"
-          :error="errors.first('days')"
+          :field="vvFields['days']"
+          :error="vvErrors.first('days')"
           class="col-12 col-md-6"
         />
       </div>
@@ -91,8 +91,8 @@
           type="date"
           data-vv-as="Fecha de inicio"
           placeholder="dd/mm/yyyy"
-          :field="fields['start-date']"
-          :error="errors.first('start-date')"
+          :field="vvFields['start-date']"
+          :error="vvErrors.first('start-date')"
           class="col-12 col-md-6"
         />
 
@@ -114,8 +114,8 @@
           type="text"
           data-vv-as="Descripción"
           placeholder=" Descripción de la incapacidad"
-          :field="fields['description']"
-          :error="errors.first('description')"
+          :field="vvFields['description']"
+          :error="vvErrors.first('description')"
           class="col-12"
         />
       </div>
@@ -226,13 +226,13 @@ export default {
       perEntityList: null,
       perCauseList: null,
       employee: null,
-      perEmployee: null,
     }
   },
   computed: {
     ...mapGetters('login', {
-      isAdmin: 'canRegisterNoveltiesToAnyEmployee',
+      isAdmin: 'isAdmin',
       user: 'user',
+      perEmployee: 'perEmployee',
     }),
     endDate() {
       return this.form && this.form.startDate
@@ -285,12 +285,10 @@ export default {
     Promise.all([
       this.getEntities(),
       this.getCauses(),
-      this.getPerEmployee(),
     ])
-    .then(([entities, causes, perEmployee]) => {
+    .then(([entities, causes, ]) => {
       this.perEntityList = entities.data
       this.perCauseList = causes.data
-      this.perEmployee = perEmployee.data
     })
     .catch(err => this.form.error = err)
     .finally(() => this.hideProgressBar())
@@ -328,7 +326,7 @@ export default {
     onSubmitSuccess(res){
       this.form.showOkModal = true
     },
-    catch(error) {
+    catch(err) {
       this.form.error = err.response && err.response
         ? err.response.data
         : 'Error inesperado'
@@ -365,13 +363,6 @@ export default {
         }
       })
     },
-    getPerEmployee(){
-      return this.axios.get('/perEmployee',{
-        params: {
-          document: this.user.document
-        }
-      })
-    }
   }
 }
 </script>

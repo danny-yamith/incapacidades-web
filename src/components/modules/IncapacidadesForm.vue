@@ -18,8 +18,8 @@
           type="text"
           class="col-12 col-md-6"
           data-vv-as="Documento del empleado"
-          :field="fields['employeeDocument']"
-          :error="errors.first('employeeDocument')"
+          :field="vvFields['employeeDocument']"
+          :error="vvErrors.first('employeeDocument')"
         />
         <QsInput
           ref="employeeNameInput"
@@ -30,8 +30,8 @@
           type="text"
           class="col-12 col-md-6"
           data-vv-as="Empleado"
-          :field="fields['employeeName']"
-          :error="errors.first('employeeName')"
+          :field="vvFields['employeeName']"
+          :error="vvErrors.first('employeeName')"
           :disabled="true"
         />
       </div>
@@ -47,8 +47,8 @@
           :options="causeOptions"
           class="col-12 col-md-6"
           :disabled="isCauseSelectDisabled"
-          :field="fields['cause']"
-          :error="errors.first('cause')"
+          :field="vvFields['cause']"
+          :error="vvErrors.first('cause')"
         />
 
         <QsInput
@@ -62,8 +62,8 @@
           placeholder="Seleccione un diagnóstico"
           class="col-12 col-md-6"
           :options="cie10Options"
-          :field="fields['cie10']"
-          :error="errors.first('cie10')"
+          :field="vvFields['cie10']"
+          :error="vvErrors.first('cie10')"
         />
       </div>
 
@@ -78,8 +78,8 @@
           :options="entityOptions"
           class="col-12 col-md-6"
           :disabled="isEntitySelectDisabled"
-          :field="fields['company']"
-          :error="errors.first('company')"
+          :field="vvFields['company']"
+          :error="vvErrors.first('company')"
         />
 
         <QsInput
@@ -90,8 +90,8 @@
           type="number"
           data-vv-as="Días de incapacidad"
           placeholder="Ingrese el número de dias"
-          :field="fields['days']"
-          :error="errors.first('days')"
+          :field="vvFields['days']"
+          :error="vvErrors.first('days')"
           class="col-12 col-md-6"
         />
       </div>
@@ -105,8 +105,8 @@
           type="date"
           data-vv-as="Fecha de inicio"
           placeholder="dd/mm/yyyy"
-          :field="fields['start-date']"
-          :error="errors.first('start-date')"
+          :field="vvFields['start-date']"
+          :error="vvErrors.first('start-date')"
           class="col-12 col-md-6"
         />
 
@@ -128,8 +128,8 @@
           type="text"
           data-vv-as="Descripción"
           placeholder=" Descripción de la incapacidad"
-          :field="fields['description']"
-          :error="errors.first('description')"
+          :field="vvFields['description']"
+          :error="vvErrors.first('description')"
           class="col-12"
         />
       </div>
@@ -240,13 +240,13 @@ export default {
       perCauseList: null,
       perCie10List: null,
       employee: null,
-      perEmployee: null,
     }
   },
   computed: {
     ...mapGetters('login', {
-      isAdmin: 'canRegisterNoveltiesToAnyEmployee',
+      isAdmin: 'isAdmin',
       user: 'user',
+      perEmployee: 'perEmployee',
     }),
     endDate() {
       return this.form && this.form.startDate 
@@ -335,13 +335,11 @@ export default {
       this.getEntities(),
       this.getCauses(),
       this.getCie10(),
-      this.getPerEmployee(),
     ])
-    .then(([entities, causes, cie10, perEmployee]) => {
+    .then(([entities, causes, cie10,]) => {
       this.perEntityList = entities.data
       this.perCauseList = causes.data
       this.perCie10List = cie10.data
-      this.perEmployee = perEmployee.data
     })
     .catch(err => this.form.error = err)
     .finally(() => this.hideProgressBar())
@@ -424,13 +422,6 @@ export default {
     getCie10(){
       return this.axios.get('/perCie10')
     },
-    getPerEmployee(){
-      return this.axios.get('/perEmployee', {
-        params: {
-          document: this.user.document
-        }
-      })
-    }
   }
 }
 </script>
