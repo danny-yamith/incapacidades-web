@@ -290,7 +290,10 @@ export default {
       this.perEntityList = entities.data
       this.perCauseList = causes.data
     })
-    .catch(err => this.form.error = err)
+    .catch(err => { 
+      this.form.error = err
+      this.form.showErrorModal = true
+    })
     .finally(() => this.hideProgressBar())
   },
   methods: {
@@ -299,19 +302,19 @@ export default {
       .then(valid => {
         if(valid) {
           let empId = this.isAdmin
-            ? this.employee.id
-            : this.perEmployee.id
+            ? Number(this.employee.id)
+            : Number(this.perEmployee.id)
 
           this.showProgressBar()
           this.axios.post('/perAccident', {
             empId,
             regDate: this.$moment(this.form.startDate, 'YYYY-MM-DD')
               .format(),
-            causeId: this.form.cause,
-            days: this.form.days,
+            causeId: Number(this.form.cause),
+            days: Number(this.form.days),
             extDays: 0,
             loadedDays: 0,
-            entityId: this.form.company,
+            entityId: Number(this.form.company),
             notes: this.form.description,
             investigate: false,
             active: true,
@@ -327,6 +330,7 @@ export default {
       this.form.showOkModal = true
     },
     catch(err) {
+      console.error(err)
       this.form.error = err.response && err.response
         ? err.response.data
         : 'Error inesperado'
@@ -349,6 +353,7 @@ export default {
         params: { document: this.form.id }
       })
       .then(res => this.employee = res.data)
+      .catch(this.catch)
       .finally(() => this.hideProgressBar())
     }, 1000),
     getEntities() {

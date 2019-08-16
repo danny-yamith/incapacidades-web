@@ -60,6 +60,7 @@
           type="text"
           data-vv-as="Diagnóstico"
           placeholder="Seleccione un diagnóstico"
+          autocomplete="off"
           class="col-12 col-md-6"
           :options="cie10Options"
           :field="vvFields['cie10']"
@@ -296,9 +297,10 @@ export default {
           }))
     },
     cie10Options(){
-      return !this.perCauseList || this.form.cie10.length <= 2
-        ? []
-        : this.perCie10List
+      if(!this.perCauseList || this.form.cie10.length <= 2)
+        return  []
+      else {  
+        const options = this.perCie10List
           .map(item => {
             item.label = `[${item.cod}] ${item.description}`
             return item
@@ -311,6 +313,10 @@ export default {
             value: item.description,
             text: item.label,
           }))
+          console.log(options)
+
+        return options.length == 1 ? [] : options
+      }
     },
     cie10TextOptions() {
       return !this.perCie10List
@@ -328,6 +334,9 @@ export default {
         this.onReset()
       }
     },
+    'form.cause'() {
+      this.form.cie10 = ''
+    }
   },
   created() {
     this.showProgressBar()
@@ -354,8 +363,8 @@ export default {
           let perCie10Id = cie10 && cause.cie10  ? cie10.id : null
 
           let empId = this.isAdmin
-            ? this.employee.id
-            : this.perEmployee.id
+            ? Number(this.employee.id)
+            : Number(this.perEmployee.id)
 
 
           this.showProgressBar()
@@ -365,13 +374,13 @@ export default {
               .format(),
             endDate: this.$moment(this.endDate , 'DD/MM/YYYY')
               .format(),
-            days: this.form.days,
-            causeId: this.form.cause,
+            days: Number(this.form.days),
+            causeId: Number(this.form.cause),
             extDays: 0,
             notes: this.form.description,
             active: true,
             perCie10Id,
-            entityId: this.form.company,
+            entityId: Number(this.form.company),
           })
           .then(this.onSubmitSuccess)
           .catch(this.catch)
@@ -383,6 +392,7 @@ export default {
       this.form.showOkModal = true
     },
     catch(err){
+      console.error(err)
       this.form.error = err.response && err.response.data 
         ? err.response.data 
         : 'Error inesperado'
@@ -405,6 +415,7 @@ export default {
         params: { document: this.form.id }
       })
       .then(res => this.employee = res.data)
+      .catch(this.catch)
       .finally(() => this.hideProgressBar())
     }, 1000),
     getEntities(){

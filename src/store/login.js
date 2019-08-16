@@ -90,12 +90,8 @@ const actions = {
         throw err
       })
   },
-  getPerEmployee({ commit, dispatch }, perEmployeeDocument){
-    return axios.get('/perEmployee', {
-      params: {
-        document: perEmployeeDocument,
-      },
-    })
+  getPerEmployee({ commit, dispatch }, perEmployeeId){
+    return axios.get(`/perEmployee/${perEmployeeId}`)
     .then(res => {
       commit('setPerEmployee', res.data)
       return res.data
@@ -127,6 +123,8 @@ const actions = {
           throw new Error("El usuario no tiene perfiles asignados")
         }
 
+        console.log(res)
+
         commit('setIsAdmin', isAdmin)
         return res.data
       }).catch(err => {
@@ -136,7 +134,7 @@ const actions = {
         throw err
       })
       .then(isAdmin => {
-        return dispatch('getPerEmployee', getters.user.document)
+        return dispatch('getPerEmployee', getters.user.id)
       })
   },
   getPerContract({ commit, dispatch, state, getters }){
