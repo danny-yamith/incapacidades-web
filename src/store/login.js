@@ -110,7 +110,7 @@ const actions = {
     })
   },
   logOut({ dispatch }) {
-    dispatch('clearAllState', null, { root: true })
+    // dispatch('clearAllState', null, { root: true })
     return new Promise(function (resolve, reject) {
       resolve()
     })
@@ -120,13 +120,19 @@ const actions = {
       .then(res => {
         const isAdmin = res.data
           .map(perProfCfg => perProfCfg.regAnyAttenNov)
-          .reduce((prev, act) => prev || act)
+          .reduce((prev, act) => prev || act, false)
+
+        if(!res.data.length) {
+          console.log('El usuario no tiene perfiles asignados')
+          throw new Error("El usuario no tiene perfiles asignados")
+        }
 
         commit('setIsAdmin', isAdmin)
         return res.data
       }).catch(err => {
+        const message = err.message ? err.message : 'No tiene permisos'
         dispatch('logOut')
-        commit('setError', 'No tiene permisos')
+        commit('setError', message)
         throw err
       })
       .then(isAdmin => {
