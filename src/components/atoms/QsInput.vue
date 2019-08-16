@@ -13,6 +13,8 @@
         :placeholder="placeholder"
         :state="inputState"
         :list="name"
+        @blur="$emit('blur')"
+        @focusout="$emit('focusout')"
       />
       <b-form-datalist
         v-if="options"

@@ -20,6 +20,7 @@
           data-vv-as="Documento del empleado"
           :field="vvFields['employeeDocument']"
           :error="vvErrors.first('employeeDocument')"
+          @blur="getEmployee"
         />
         <QsInput
           ref="employeeNameInput"
@@ -326,9 +327,6 @@ export default {
     },
   },
   watch: {
-    'form.id'() {
-      this.getEmployee()
-    },
     'form.showOkModal'(newValue){
       if(!newValue) {
         this.onReset()
@@ -403,7 +401,7 @@ export default {
       this.employee = null
       this.$validator.reset()
     },
-    getEmployee: _.debounce(function getEmployee(){
+    getEmployee(){
       this.employee = null
 
       if(this.form.id == null 
@@ -417,7 +415,7 @@ export default {
       .then(res => this.employee = res.data)
       .catch(this.catch)
       .finally(() => this.hideProgressBar())
-    }, 1000),
+    },
     getEntities(){
       return this.axios.get('/perEntity', {
         params: { type: 'ips'}
