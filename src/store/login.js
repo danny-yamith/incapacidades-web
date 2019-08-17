@@ -106,7 +106,7 @@ const actions = {
     })
   },
   logOut({ dispatch }) {
-    // dispatch('clearAllState', null, { root: true })
+    dispatch('clearAllState', null, { root: true })
     return new Promise(function (resolve, reject) {
       resolve()
     })
@@ -144,9 +144,13 @@ const actions = {
       }
     })
     .then(res => {
+      console.log('perContract', res)
       commit('setPerContract', res.data)
     })
     .catch(err => {
+      console.log(err)
+      console.log('hasContract', getters.hasContract)
+      console.log('isAdmin', getters.isAdmin)
       if(!getters.hasContract && !getters.isAdmin){
         dispatch('logOut')
         commit('setError', 'El usuario no tiene contratos vigentes')
