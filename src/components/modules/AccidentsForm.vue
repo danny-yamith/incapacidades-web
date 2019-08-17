@@ -158,6 +158,7 @@
       >
         <b-button
           size="sm"
+          variant="success"
           class="float-right"
           @click="form.showOkModal = false"
         >
@@ -296,33 +297,36 @@ export default {
   },
   methods: {
     onSubmit() {
-      this.$validator.validateAll()
-      .then(valid => {
-        if(valid) {
-          let empId = this.isAdmin
-            ? Number(this.employee.id)
-            : Number(this.perEmployee.id)
+      const postIfValid = () => this.$validator.validateAll()
+        .then(valid => {
+          if(valid) {
+            let empId = this.isAdmin
+              ? Number(this.employee.id)
+              : Number(this.perEmployee.id)
 
-          this.showProgressBar()
-          this.axios.post('/perAccident', {
-            empId,
-            regDate: this.$moment(this.form.startDate, 'YYYY-MM-DD')
-              .format(),
-            causeId: Number(this.form.cause),
-            days: Number(this.form.days),
-            extDays: 0,
-            loadedDays: 0,
-            entityId: Number(this.form.company),
-            notes: this.form.description,
-            investigate: false,
-            active: true,
-            employeerId: 0
-          })
-          .then(this.onSubmitSuccess)
-          .catch(this.catch)
-          .finally(() => this.hideProgressBar())
-        }
-      })
+            this.showProgressBar()
+            this.axios.post('/perAccident', {
+              empId,
+              regDate: this.$moment(this.form.startDate, 'YYYY-MM-DD')
+                .format(),
+              causeId: Number(this.form.cause),
+              days: Number(this.form.days),
+              extDays: 0,
+              loadedDays: 0,
+              entityId: Number(this.form.company),
+              notes: this.form.description,
+              investigate: false,
+              active: true,
+              employeerId: 0
+            })
+            .then(this.onSubmitSuccess)
+            .catch(this.catch)
+            .finally(() => this.hideProgressBar())
+          }
+        })
+      
+      this.getEmployee()
+        .then(() => postIfValid())
     },
     onSubmitSuccess(res){
       this.form.showOkModal = true
@@ -347,7 +351,7 @@ export default {
         || this.form.id.length == 0) return;
       
       this.showProgressBar()
-      this.axios.get('/perEmployee', {
+      return this.axios.get('/perEmployee', {
         params: { document: this.form.id }
       })
       .then(res => this.employee = res.data)

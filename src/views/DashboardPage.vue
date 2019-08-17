@@ -1,7 +1,8 @@
 <template>
   <QsModuleLayout>
     <template v-slot:header>
-      <h1>Dashboard</h1>
+      <h1 v-if="isNotPhone()">Dashboard</h1>
+      <h4 v-if="isPhone()">Dashboard</h4>
       <div>Indicadores de desempeño</div>
     </template>
 

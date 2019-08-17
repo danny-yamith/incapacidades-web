@@ -1,7 +1,8 @@
 <template>
   <QsModuleLayout>
     <template v-slot:header>
-      <h1>Mis Incapacidades</h1>
+      <h1 v-if="isNotPhone()">Mis Incapacidades</h1>
+      <h4 v-if="isPhone()">Mis Incapacidades</h4>
     </template>
 
     <template v-slot:content>
