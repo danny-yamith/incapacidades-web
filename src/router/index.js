@@ -23,12 +23,12 @@ const routes = [
           {
             path: 'incapacidades',
             name: 'incapacidades',
-            component: () => import('@/views/IncapacidadesPage'),
+            component: () => import('@/views/DisabilitiesPage'),
           },
           {
             path: 'accidentes',
             name: 'accidentes',
-            component: () => import('@/views/AccidentesPage')
+            component: () => import('@/views/AccidentsPage')
           },
           {
             path: 'dashboard',

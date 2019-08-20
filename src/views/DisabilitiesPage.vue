@@ -6,7 +6,7 @@
       <p>Registro de incapacidades</p>
     </template>
     <template v-slot:content>
-      <IncapacidadesForm class="col-12 col-md-10" />
+      <DisabilityForm class="col-12 col-md-10" />
     </template>
   </QsModuleLayout>
 </template>
@@ -14,12 +14,12 @@
 <script>
 import QsModuleLayout from '@/components/layouts/QsModuleLayout'
 import { mapGetters } from 'vuex';
-import IncapacidadesForm from '@/components/modules/IncapacidadesForm'
+import DisabilityForm from '@/components/modules/DisabilityForm'
 
 export default {
   components: {
     QsModuleLayout,
-    IncapacidadesForm,
+    DisabilityForm,
   },
   computed: {
     ...mapGetters('login', {

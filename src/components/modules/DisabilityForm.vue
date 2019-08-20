@@ -302,7 +302,7 @@ export default {
       if(!this.perCauseList || this.form.cie10.length <= 2)
         return  []
       else {  
-        const options = this.perCie10List
+        const options = _.chain(this.perCie10List)
           .map(item => {
             item.label = `[${item.cod}] ${item.description}`
             return item
@@ -310,12 +310,12 @@ export default {
           .filter(item => { 
             return item.description.includes(this.form.cie10.toUpperCase())
           })
-          .slice(0,10)
+          .take(10)
           .map(item => ({
             value: item.description,
             text: item.label,
           }))
-          console.log(options)
+          .value()
 
         return options.length == 1 ? [] : options
       }
@@ -356,36 +356,37 @@ export default {
   methods: {
     onSubmit(){
       const postIfValid = () => this.$validator.validateAll().then(valid => {
-        if(valid){
-          let cie10 = this.perCie10List.find(item => item.description == this.form.cie10) 
-          let cause = this.perCauseList.find(item => item.id == this.form.cause)
-          let perCie10Id = cie10 && cause.cie10  ? cie10.id : null
+          if(valid){
+            let cie10 = this.perCie10List.find(item => item.description == this.form.cie10) 
+            let cause = this.perCauseList.find(item => item.id == this.form.cause)
+            let perCie10Id = cie10 && cause.cie10  ? cie10.id : null
 
-          let empId = this.isAdmin
-            ? Number(this.employee.id)
-            : Number(this.perEmployee.id)
+            let empId = this.isAdmin
+              ? Number(this.employee.id)
+              : Number(this.perEmployee.id)
 
 
-          this.showProgressBar()
-          this.axios.post('/perSickLeave', {
-              empId,
-              regDate: this.$moment(this.form.startDate, 'YYYY-MM-DD')
-                .format(),
-              endDate: this.$moment(this.endDate , 'DD/MM/YYYY')
-                .format(),
-              days: Number(this.form.days),
-              causeId: Number(this.form.cause),
-              extDays: 0,
-              notes: this.form.description,
-              active: true,
-              perCie10Id,
-              entityId: Number(this.form.company),
-            })
-            .then(this.onSubmitSuccess)
-            .catch(this.catch)
-            .finally(() => this.hideProgressBar())
-        } 
-      })
+            this.showProgressBar()
+            this.axios.post('/perSickLeave', {
+                empId,
+                regDate: this.$moment(this.form.startDate, 'YYYY-MM-DD')
+                  .format(),
+                endDate: this.$moment(this.endDate , 'DD/MM/YYYY')
+                  .format(),
+                days: Number(this.form.days),
+                causeId: Number(this.form.cause),
+                extDays: 0,
+                notes: this.form.description,
+                active: true,
+                perCie10Id,
+                entityId: Number(this.form.company),
+              })
+              .then(this.onSubmitSuccess)
+              .catch(this.catch)
+              .finally(() => this.hideProgressBar())
+          } 
+        })
+    
 
       this.getEmployee()
         .then(() => postIfValid())
@@ -409,9 +410,12 @@ export default {
     getEmployee(){
       this.employee = null
 
-      if(this.form.id == null 
+      if(
+        !this.isAdmin
+        || this.form.id == null 
         || this.form.id == undefined 
-        ||this.form.id.length == 0) return;
+        || this.form.id.length == 0 
+        ) return new Promise((resolve, reject) => resolve())
 
       this.showProgressBar()
       return this.axios.get('/perEmployee', {

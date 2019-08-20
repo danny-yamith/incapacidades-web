@@ -346,9 +346,10 @@ export default {
     getEmployee(){
       this.employee = null
 
-      if(this.form.id == null
+      if( !this.isAdmin
+        || this.form.id == null
         || this.form.id == undefined
-        || this.form.id.length == 0) return;
+        || this.form.id.length == 0) return new Promise((resolve, reject) => resolve())
       
       this.showProgressBar()
       return this.axios.get('/perEmployee', {

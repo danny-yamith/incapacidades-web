@@ -9,7 +9,7 @@
     >
       <img :src="`${baseUrl}bfile/getEntLogoByPoolName?ownerId=1&poolName=${getPoolName}`">
     </div>
-    <DualRadialSlicer 
+    <LoginLayout 
       class="dual-radial-slicer"
       :primary-side="side"
       :show-controls="false"
@@ -44,12 +44,12 @@
           <LoginForm />
         </div>
       </template>
-    </DualRadialSlicer>
+    </LoginLayout>
   </div>
 </template>
 
 <script>
-import DualRadialSlicer from '@/components/layouts/DualRadialSlicerLayout'
+import LoginLayout from '@/components/layouts/LoginLayout'
 import LoginForm from '@/components/modules/LoginForm'
 import QsProgressBar from '@/components/atoms/QsProgressBar'
 import { setTimeout } from 'timers';
@@ -57,7 +57,7 @@ import { baseUrl } from '@/utils/constants'
 
 export default {
   components: {
-    DualRadialSlicer,
+    LoginLayout,
     LoginForm,
     QsProgressBar,
   },
