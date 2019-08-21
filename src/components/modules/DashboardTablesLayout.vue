@@ -47,8 +47,7 @@
         v-model="selectedEntityType" 
         :options="entityTypeOptions"
         class="col-3"
-      >
-      </b-select>
+      />
     </div>
 
     <div 
@@ -60,8 +59,7 @@
         v-model="selectedDisabilityType" 
         :options="disabilityTypeOptions"
         class="col-3"
-      >
-      </b-select>
+      />
     </div>
 
     <div class="col-12">
