@@ -38,6 +38,32 @@
       </ul>
     </div>
 
+    <div 
+      v-if="activeTab == 'entity'"
+      class="container row my-3"
+    >
+      <span class="col-1 my-auto">Filtrar:</span>
+      <b-select 
+        v-model="selectedEntityType" 
+        :options="entityTypeOptions"
+        class="col-3"
+      >
+      </b-select>
+    </div>
+
+    <div 
+      v-if="activeTab == 'accident'"
+      class="container row my-3"
+    >
+      <span class="col-1 my-auto">Filtrar:</span>
+      <b-select 
+        v-model="selectedDisabilityType" 
+        :options="disabilityTypeOptions"
+        class="col-3"
+      >
+      </b-select>
+    </div>
+
     <div class="col-12">
       <b-table 
         hover 
@@ -106,6 +132,8 @@ export default {
       showErrorModal: false,
       activeTab: 'entity',
       error: '',
+      selectedEntityType: 'all',
+      selectedDisabilityType: 'all',
     }
   },
   computed: { 
@@ -128,9 +156,27 @@ export default {
         },
       ]
     },
+    entityTypeOptions() {
+      return [
+        { value: 'arl', text: 'ARL' },
+        { value: 'eps', text: 'EPS' },
+        { value: 'all', text: 'Ambos' },
+      ]
+    },
+    disabilityTypeOptions(){
+      return  [
+        { value: 'acc', text: 'Accidentes' },
+        { value: 'sick', text: 'Incapacidades' },
+        { value: 'all', text: 'Ambos' },
+      ]
+    },
     table() {
       const entityArgs = {
-        items: this.perEntityRows,
+        items: this.perEntityRows ? this.perEntityRows.filter(item => {
+          if(this.selectedEntityType == 'all') return true
+          if(item.type == null || item.type == undefined) return true
+          return item.type == this.selectedEntityType
+        }) : [],
         fields: this.perEntityLabels,
       }
 
@@ -140,7 +186,11 @@ export default {
       }
 
       const accidentArgs = {
-        items: this.perAccidentRows,
+        items: this.perAccidentRows ? this.perAccidentRows.filter(item => {
+          if(this.selectedDisabilityType == 'all') return true
+          if(item.type == null || item.type == undefined) return true
+          return item.type == this.selectedDisabilityType
+        }) : [],
         fields: this.perAccidentLabels,
       }
 
@@ -210,6 +260,7 @@ export default {
             vlrRad: this.$options.filters.currency(item.vlrRad),
             vlrAprob: this.$options.filters.currency(item.vlrAprob),
             vlrPend: this.$options.filters.currency(item.vlrPend),
+            type: item.type || null
           }))
 
     },

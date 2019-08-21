@@ -11,9 +11,10 @@
       label="Usuario"
       data-vv-as="Usuario"
       placeholder="Ingrese su usuario"
+      class="input"
+      autocomplete="off"
       :field="vvFields['username']"
       :error="vvErrors.first('username')"
-      class="input"
     />
 
     <qs-input 
