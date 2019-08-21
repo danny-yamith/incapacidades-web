@@ -160,14 +160,14 @@ export default {
       return [
         { value: 'arl', text: 'ARL' },
         { value: 'eps', text: 'EPS' },
-        { value: 'all', text: 'Ambos' },
+        { value: 'all', text: 'Todos' },
       ]
     },
     disabilityTypeOptions(){
       return  [
         { value: 'acc', text: 'Accidentes' },
         { value: 'sick', text: 'Incapacidades' },
-        { value: 'all', text: 'Ambos' },
+        { value: 'all', text: 'Todos' },
       ]
     },
     table() {

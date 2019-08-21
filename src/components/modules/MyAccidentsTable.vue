@@ -96,6 +96,7 @@ export default {
   data() {
     return {
       fields: [
+        { key: 'type', label: 'Estado' },
         { key: 'date', label: 'Fecha',   },
         { key: 'cause', label: 'Causal',  },
         { key: 'days', label: 'Días de incapacidad', class: 'text-right'  },
@@ -140,6 +141,7 @@ export default {
               .format('MMMM D YYYY'),
             cause: item[2],
             days: item[3],
+            type: item[4] == 'req' || item[4] == 'rad' ? 'En proceso' : 'Aprobado',
           }))
           return this.accidents
         })
