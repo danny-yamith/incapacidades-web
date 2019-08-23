@@ -33,10 +33,12 @@ export default {
     startDate() {
       return this.$moment()
         .subtract(30, 'days')
+        .utc()
         .format()
     },
     endDate() {
       return this.$moment()
+        .utc()
         .format()
     },
   },

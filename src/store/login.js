@@ -54,12 +54,12 @@ const mutations = {
 
 const actions = {
   logIn({ commit, dispatch }, { username, password, poolName, type = 'web' }) {
-
     return axios.post('/employee/login', {
         login: username,
         pass: password,
         poolName,
-        type
+        type,
+        tz: 'GMT-05:00'
       })
       .then(res => {
         commit('setSession', res.data)

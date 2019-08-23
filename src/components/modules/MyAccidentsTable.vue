@@ -138,6 +138,7 @@ export default {
             date: this.$moment(
                 item[1],
                 this.$moment.defaultFormat)
+                .utc()
               .format('MMMM D YYYY'),
             cause: item[2],
             days: item[3],

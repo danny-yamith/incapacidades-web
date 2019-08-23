@@ -23,7 +23,7 @@
       {{ today }}
     </div>
     <div>
-      {{ $moment(Date.now()).format("llll") }}
+      {{ $moment(Date.now()).utc().format("llll") }}
     </div>
     <div>
       {{ $duration(500).humanize() }}

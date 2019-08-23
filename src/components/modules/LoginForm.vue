@@ -30,20 +30,6 @@
       class="input"
     />
 
-    <div class="form-check">
-      <input 
-        id="gridCheck1"
-        class="form-check-input" 
-        type="checkbox" 
-      >
-      <label 
-        class="form-check-label" 
-        for="gridCheck1"
-      >
-        Recordar
-      </label>
-    </div>
-
     <div class="controls">
       <b-button 
         type="submit" 
@@ -106,10 +92,16 @@ export default {
     }),
     ...mapGetters('login', {
       isAdmin: 'isAdmin',
+      user: 'user',
     }),
     md5pass() {
       return md5(this.password)
         .toUpperCase()
+    }
+  },
+  mounted(){
+    if(this.user != null){
+      this.$router.push({ name: this.isAdmin ? 'dashboard' : 'incapacidades' })
     }
   },
   methods: {

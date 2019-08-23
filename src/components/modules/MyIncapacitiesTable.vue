@@ -141,7 +141,8 @@ export default {
             date: this.$moment(
               item[1],
               this.$moment.defaultFormat
-            ).format('MMMM D YYYY'),
+            )
+            .utc().format('MMMM D YYYY'),
             cause: item[2],
             days: item[3],
             type: item[4] == 'req' || item[4] == 'rad' ? 'En proceso' : 'Aprobado',

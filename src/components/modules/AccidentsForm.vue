@@ -2,7 +2,7 @@
   <div>
     <b-form
       class="form p-4" 
-      @submit.prevent="onSubmit"
+      @submit.prevent
       @reset.prevent="onReset"
     >
       <div 
@@ -59,9 +59,9 @@
           v-model="form.company"
           v-validate="{required: true}"
           name="company"
-          label="EPS/ARP"
-          data-vv-as="EPS/ARP"
-          empty-option="Seleccione EPS/ARP"
+          label="ARL"
+          data-vv-as="ARL"
+          empty-option="Seleccione ARL"
           :options="entityOptions"
           class="col-12 col-md-6"
           :disabled="areSelectsDisabled"
@@ -123,10 +123,11 @@
 
       <div class="controls row justify-content-end my-2 mx-0">
         <b-button 
-          type="submit" 
+          type="button" 
           variant="primary"
           class="button"
           :class="[ { phone: isPhone() } ]"
+          @click="onSubmit"
         >
           Aceptar
         </b-button>
@@ -240,6 +241,7 @@ export default {
       return this.form && this.form.startDate
         ? this.$moment(this.form.startDate, 'YYYY-MM-DD')
           .add(this.form.days, 'days')
+          .utc()
           .format('DD/MM/YYYY')
         : ''
     },
