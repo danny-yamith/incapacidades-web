@@ -69,6 +69,23 @@
         />
       </div>
 
+      <div 
+        class="form-row row justify-content-between my-2"
+        v-if="showDiagnosisOption"
+      >
+        <QsTextArea
+          v-model="form.cie10Description" 
+          name="cie10Description"
+          label="Descripción Diagnóstico"
+          type="text"
+          data-vv-as="Descripción Diagnóstico"
+          placeholder=" Descripción del diagnóstico"
+          :field="vvFields['cie10Description']"
+          :error="vvErrors.first('cie10Description')"
+          class="col-12"
+        />
+      </div>
+
       <div class="form-row row justify-content-between align-items-end align-items-lg-start  my-2">
         <QsSelect
           v-model="form.company"
@@ -129,7 +146,7 @@
           label="Descripción"
           type="text"
           data-vv-as="Descripción"
-          placeholder=" Descripción de la incapacidad"
+          placeholder="Descripción"
           :field="vvFields['description']"
           :error="vvErrors.first('description')"
           class="col-12"
@@ -226,6 +243,7 @@ const emptyFormData = () => ({
   id: '',
   cause: null,
   cie10: '',
+  cie10Description: '',
   showOkModal: false,
   showErrorModal: false,
   error: '',
@@ -367,7 +385,7 @@ export default {
               ? Number(this.employee.id)
               : Number(this.perEmployee.id)
 
-
+            console.log('cie10Description: ', this.form.cie10Description)
             this.showProgressBar()
             this.axios.post('/perSickLeave', {
                 empId,
@@ -377,6 +395,7 @@ export default {
                   .format(),
                 days: Number(this.form.days),
                 causeId: Number(this.form.cause),
+                cie10Description: this.form.cie10Description,
                 extDays: 0,
                 notes: this.form.description,
                 active: true,

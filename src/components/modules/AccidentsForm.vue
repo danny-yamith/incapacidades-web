@@ -211,7 +211,6 @@ const emptyFormData = () => ({
   startDate: '',
   id: '',
   cause: null,
-  cie10: '',
   showOkModal: false,
   showErrorModal: false,
   error: '',
