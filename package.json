@@ -15,7 +15,7 @@
     "bootstrap-vue": "^2.0.0-rc.25",
     "chart.js": "^2.8.0",
     "core-js": "^2.6.5",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "moment": "^2.24.0",
     "vee-validate": "^2.2.11",
     "vue": "^2.6.10",
